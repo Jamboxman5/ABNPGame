@@ -1,9 +1,9 @@
-package managers;
+package me.jamboxman5.abnpgame.managers;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import main.GamePanel;
+import me.jamboxman5.abnpgame.main.GamePanel;
 
 public class KeyHandler implements KeyListener {
 

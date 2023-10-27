@@ -1,10 +1,10 @@
-package util;
+package me.jamboxman5.abnpgame.util;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import main.GamePanel;
+import me.jamboxman5.abnpgame.main.GamePanel;
 
 public class Utilities {
 	

@@ -1,4 +1,4 @@
-package main;
+package me.jamboxman5.abnpgame.main;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,13 +8,16 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import assets.entity.player.Player;
-import managers.KeyHandler;
-import managers.MapManager;
-import managers.MouseHandler;
-import managers.MouseMotionHandler;
+import me.jamboxman5.abnpgame.assets.entity.player.Player;
+import me.jamboxman5.abnpgame.managers.KeyHandler;
+import me.jamboxman5.abnpgame.managers.MapManager;
+import me.jamboxman5.abnpgame.managers.MouseHandler;
+import me.jamboxman5.abnpgame.managers.MouseMotionHandler;
+import me.jamboxman5.abnpgame.net.GameClient;
+import me.jamboxman5.abnpgame.net.GameServer;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -37,7 +40,11 @@ public class GamePanel extends JPanel implements Runnable {
 	private final MouseHandler mouseActionHandler = new MouseHandler(this);
 	
 	private final Player player = new Player(this, keyHandler);
+	private String playerName = "";
 	private Point mousePointer;
+	
+	private GameClient socketClient;
+	private GameServer socketServer;
 	
 	public GamePanel() {
 		
@@ -48,7 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
 		addMouseMotionListener(mouseMotionHandler);
 		addMouseListener(mouseActionHandler);
 		setFocusable(true);
-		
+				
 	}
 	
 	public void lambda() {
@@ -131,8 +138,21 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void start() {
+		
+		setUp();
+		
 		gameThread = new Thread(this);
 		gameThread.start();
+		
+		playerName = JOptionPane.showInputDialog("Input Gamertag: ");
+		
+		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
+			socketServer = new GameServer(this);
+			socketServer.start();
+		}
+		
+		socketClient = new GameClient(this, "67.246.103.207");
+		socketClient.start();
 	}
 
 	public int getScreenWidth() { return screenWidth; }
@@ -141,5 +161,8 @@ public class GamePanel extends JPanel implements Runnable {
 	public Player getPlayer() {	return player; }
 	public void setMousePointer(Point location) { mousePointer = location; }
 	public Point getMousePointer() { return mousePointer; }
+	public void setPlayerName(String name) { playerName = name; }
+	public String getPlayerName() { return playerName; }
+	public GameClient getClient() { return socketClient; }
 
 }

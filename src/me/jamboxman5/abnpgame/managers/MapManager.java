@@ -1,4 +1,4 @@
-package managers;
+package me.jamboxman5.abnpgame.managers;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -7,9 +7,9 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
-import assets.maps.Map;
-import main.GamePanel;
-import util.Utilities;
+import me.jamboxman5.abnpgame.assets.maps.Map;
+import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.util.Utilities;
 
 public class MapManager {
 	
@@ -51,7 +51,7 @@ public class MapManager {
 	public void setup(String imageName) {
         try {
             m = new Map(imageName);
-            m.setImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/maps/" + imageName + ".png"))));
+            m.setImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/resources/maps/" + imageName + ".png"))));
             m.setImage(Utilities.scaleImage(m.getImage(), m.getImage().getWidth()*2, m.getImage().getHeight()*2));
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package managers;
+package me.jamboxman5.abnpgame.managers;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,8 +11,8 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
-import main.GamePanel;
-import util.Utilities;
+import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.util.Utilities;
 
 public class MouseMotionHandler implements MouseMotionListener {
 
@@ -36,7 +36,7 @@ public class MouseMotionHandler implements MouseMotionListener {
 	public void setupCursor(String cursorName) {
 		
 		try {
-			cursor = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/cursors/" + cursorName + ".png")));
+			cursor = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/resources/cursors/" + cursorName + ".png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

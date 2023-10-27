@@ -1,14 +1,16 @@
-package assets.entity.player;
+package me.jamboxman5.abnpgame.assets.entity.player;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
-import assets.entity.Entity;
-import assets.maps.Map;
-import main.GamePanel;
-import managers.KeyHandler;
+import me.jamboxman5.abnpgame.assets.entity.Entity;
+import me.jamboxman5.abnpgame.assets.maps.Map;
+import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.managers.KeyHandler;
 
 public class Player extends Entity {
 	
@@ -29,7 +31,7 @@ public class Player extends Entity {
 		screenY = gamePanel.getScreenHeight()/2 - 50;
 		
 		setDefaults();
-		setImages();
+//		setImages();
 	}
 
 	private void setImages() {
@@ -80,33 +82,53 @@ public class Player extends Entity {
 	}
 	
 	public void move() {
-
-		switch (getDirection()) {
-        case "forward":
-        	mfw();
-        	break;
-        case "back": 
-        	mbk();
-        	break;
-        case "left": 
-        	mlt();
-        	break;
-        case "right": 
-        	mrt();
-        	break;
+		
+		if (getAdjustedScreenX() == gp.getMousePointer().getX() &&
+			getAdjustedScreenY() == gp.getMousePointer().getY()) {
+			switch (getDirection()) {
+	        case "forward":
+	        	setWorldY(getWorldY() - getStrafeSpeed());
+	        	break;
+	        case "back": 
+	        	setWorldY(getWorldY() + getStrafeSpeed());
+	        	break;
+	        case "left": 
+	        	setWorldX(getWorldX() - getStrafeSpeed());
+	        	break;
+	        case "right": 
+	        	setWorldX(getWorldX() + getStrafeSpeed());
+	        	break;
+			}
+		} else {
+			switch (getDirection()) {
+	        case "forward":
+	        	mfw();
+	        	break;
+	        case "back": 
+	        	mbk();
+	        	break;
+	        case "left": 
+	        	mlt();
+	        	break;
+	        case "right": 
+	        	mrt();
+	        	break;
+			}
 		}
+
+		
 	}
 	
 	public void mfw() {
 		
 		if (gp.getMousePointer() == null) return;
 
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()-2) {
+		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
 			double xComp = getSpeed() * Math.cos(rotation);
 			double yComp = getSpeed() * Math.sin(rotation);
 			setWorldX(getWorldX() + xComp);
 			setWorldY(getWorldY() + yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()-2) {
+		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
 			double xComp = getSpeed() * Math.cos(rotation);
 			double yComp = getSpeed() * Math.sin(rotation);
 			setWorldX(getWorldX() - xComp);
@@ -126,12 +148,12 @@ public class Player extends Entity {
 	public void mbk() {
 		if (gp.getMousePointer() == null) return;
 
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()-2) {
+		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
 			double xComp = getStrafeSpeed() * Math.cos(rotation);
 			double yComp = getStrafeSpeed() * Math.sin(rotation);
 			setWorldX(getWorldX() - xComp);
 			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()-2) {
+		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
 			double xComp = getStrafeSpeed() * Math.cos(rotation);
 			double yComp = getStrafeSpeed() * Math.sin(rotation);
 			setWorldX(getWorldX() + xComp);
@@ -151,12 +173,12 @@ public class Player extends Entity {
 	public void mrt() {
 		if (gp.getMousePointer() == null) return;
 
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()-2) {
+		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
 			double xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
 			double yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
 			setWorldX(getWorldX() - xComp);
 			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()-2) {
+		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
 			double xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
 			double yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
 			setWorldX(getWorldX() + xComp);
@@ -176,12 +198,12 @@ public class Player extends Entity {
 	public void mlt() {
 		if (gp.getMousePointer() == null) return;
 
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()-2) {
+		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
 			double xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
 			double yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
 			setWorldX(getWorldX() - xComp);
 			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()-2) {
+		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
 			double xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
 			double yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
 			setWorldX(getWorldX() + xComp);
@@ -201,6 +223,8 @@ public class Player extends Entity {
 	
 	@Override
 	public void draw(Graphics2D g2) {
+		
+		if (gp.getMousePointer() == null) return;
 				
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -215,20 +239,43 @@ public class Player extends Entity {
 		
 		int y = getAdjustedScreenY();
 		
+		
 		g2.setColor(Color.RED);
 		try {
-			g2.drawLine(x, y, (int)gp.getMousePointer().getX(), (int)gp.getMousePointer().getY());
+		    g2.setStroke(new BasicStroke(2));
+		    g2.drawLine(x, y, (int)gp.getMousePointer().getX(), (int)gp.getMousePointer().getY());
 		} catch (NullPointerException e) {
 			
-		}	    
+		}	
+		
+		double angle = 0;
+		if (x != gp.getMousePointer().getX() &&
+			y != gp.getMousePointer().getY()) {
+			angle = getAngleToCursor();
+		}
+		
 		AffineTransform tx = new AffineTransform();
 	    AffineTransform old = g2.getTransform();
-	    tx.setToTranslation(gp.getScreenWidth()/2, (gp.getScreenHeight()-32)/2);
-	    tx.rotate(getAngleToCursor());
+	    tx.setToTranslation(x, y);
+	    tx.rotate(angle);
 	    g2.transform(tx);
-		g2.drawImage(getSprite(), x, y, null);
-
-		g2.setTransform(old);
+	    g2.fillRect(-20, -20, 40, 40);
+	    g2.setStroke(new BasicStroke(4));
+		g2.setColor(Color.white);
+		g2.drawRect(-20, -20, 40, 40);
+	    
+		g2.setStroke(new BasicStroke());
+	    g2.setTransform(old);
+		
+	    String name = gp.getPlayerName();
+        int length = (int) g2.getFontMetrics().getStringBounds(name, g2).getWidth();
+        g2.setFont(new Font("Lexend", Font.BOLD, 20));
+        g2.drawString(name, x - (length/2), y - 45);
+	    
+		g2.setColor(Color.yellow);
+		g2.fillOval(x-5, y-5, 10, 10);
+		
+		
 		
 	}
 
@@ -236,8 +283,8 @@ public class Player extends Entity {
 
 	private double getAngleToCursor() {
 		try {
-			double num = gp.getHeight()/2 - gp.getMousePointer().getY();
-			double denom = (gp.getWidth()/2)+32 - gp.getMousePointer().getX();
+			double num = (gp.getHeight()/2) - 22 - gp.getMousePointer().getY();
+			double denom = (gp.getWidth()/2) - gp.getMousePointer().getX();
 			return Math.atan(num/denom);
 		} catch (NullPointerException e) {
 			return 0;

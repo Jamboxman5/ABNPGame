@@ -1,4 +1,4 @@
-package assets.maps;
+package me.jamboxman5.abnpgame.assets.maps;
 
 import java.awt.image.BufferedImage;
 

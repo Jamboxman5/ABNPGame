@@ -1,9 +1,9 @@
-package managers;
+package me.jamboxman5.abnpgame.managers;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import main.GamePanel;
+import me.jamboxman5.abnpgame.main.GamePanel;
 
 public class MouseHandler implements MouseListener {
 
@@ -15,10 +15,13 @@ public class MouseHandler implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("playerx: " + gp.getPlayer().getAdjustedScreenX());
-		System.out.println("playery: " + gp.getPlayer().getAdjustedScreenY());
-		System.out.println("mousex: " + gp.getMousePointer().getX());
-		System.out.println("mousey: " + gp.getMousePointer().getY());
+//		System.out.println("playerx: " + gp.getPlayer().getAdjustedScreenX());
+//		System.out.println("playery: " + gp.getPlayer().getAdjustedScreenY());
+//		System.out.println("mousex: " + gp.getMousePointer().getX());
+//		System.out.println("mousey: " + gp.getMousePointer().getY());
+		
+		gp.getClient().sendData("ping".getBytes());
+		System.out.println("clicked");
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package main;
+package me.jamboxman5.abnpgame.main;
 
 import javax.swing.JFrame;
 
@@ -29,7 +29,6 @@ public class Launcher {
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 		
-		gamePanel.setUp();
 		gamePanel.start();
 		
 //		Timer t1 = new Timer(17, new Resizer());

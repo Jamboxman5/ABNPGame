@@ -1,4 +1,4 @@
-package assets.entity;
+package me.jamboxman5.abnpgame.assets.entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -7,8 +7,8 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
-import main.GamePanel;
-import util.Utilities;
+import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.util.Utilities;
 
 public abstract class Entity {
 	
@@ -43,7 +43,7 @@ public abstract class Entity {
         BufferedImage image = null;
 
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(imagePath + ".png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/" + imagePath + ".png")));
 
         } catch (IOException e) {
             e.printStackTrace();
