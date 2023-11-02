@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
 
 public class Player extends Entity {
@@ -18,14 +19,15 @@ public class Player extends Entity {
 	private final GamePanel gp;
 	private final int screenX;
 	private final int screenY;
-	
+	private String gamerTag;
 	double rotation;
 		
-	public Player(GamePanel gamePanel, KeyHandler keyHandler) {
+	public Player(GamePanel gamePanel, KeyHandler keyHandler, String name) {
 		super(gamePanel);
 
 		keyH = keyHandler;
 		gp = gamePanel;
+		gamerTag = name;
 		
 		screenX = gamePanel.getScreenWidth()/2 - 50;
 		screenY = gamePanel.getScreenHeight()/2 - 50;
@@ -224,6 +226,9 @@ public class Player extends Entity {
 	@Override
 	public void draw(Graphics2D g2) {
 		
+		if (gp.getGameStage() != GameStage.InGame) return;
+
+		
 		if (gp.getMousePointer() == null) return;
 				
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -266,11 +271,6 @@ public class Player extends Entity {
 	    
 		g2.setStroke(new BasicStroke());
 	    g2.setTransform(old);
-		
-	    String name = gp.getPlayerName();
-        int length = (int) g2.getFontMetrics().getStringBounds(name, g2).getWidth();
-        g2.setFont(new Font("Lexend", Font.BOLD, 20));
-        g2.drawString(name, x - (length/2), y - 45);
 	    
 		g2.setColor(Color.yellow);
 		g2.fillOval(x-5, y-5, 10, 10);
@@ -298,6 +298,8 @@ public class Player extends Entity {
 	public int getScreenY() { return screenY; }
 	public void setRotation(double i) { rotation = i; }
 	public double getRotation() { return rotation; }
+	public void setName(String newName) { gamerTag = newName; }
+	public String getName() { return gamerTag; }
 	public int getAdjustedScreenX() {
 		int rightOffset = gp.getScreenWidth() - screenX;
 		int x = rightOffset - 50;

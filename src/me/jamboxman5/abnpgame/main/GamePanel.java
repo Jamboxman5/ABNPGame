@@ -16,6 +16,7 @@ import me.jamboxman5.abnpgame.managers.KeyHandler;
 import me.jamboxman5.abnpgame.managers.MapManager;
 import me.jamboxman5.abnpgame.managers.MouseHandler;
 import me.jamboxman5.abnpgame.managers.MouseMotionHandler;
+import me.jamboxman5.abnpgame.managers.UIManager;
 import me.jamboxman5.abnpgame.net.GameClient;
 import me.jamboxman5.abnpgame.net.GameServer;
 
@@ -32,15 +33,15 @@ public class GamePanel extends JPanel implements Runnable {
 	private final int FPS = 60;
 	
 	private Thread gameThread;
-	
+	private GameStage stage = GameStage.MainMenu;
 	
 	private final KeyHandler keyHandler = new KeyHandler(this);
 	private final MapManager mapManager = new MapManager(this);
 	private final MouseMotionHandler mouseMotionHandler = new MouseMotionHandler(this);
 	private final MouseHandler mouseActionHandler = new MouseHandler(this);
+	private final UIManager ui = new UIManager(this, keyHandler);
 	
-	private final Player player = new Player(this, keyHandler);
-	private String playerName = "";
+	private Player player;
 	private Point mousePointer;
 	
 	private GameClient socketClient;
@@ -77,9 +78,9 @@ public class GamePanel extends JPanel implements Runnable {
 //            drawStart = System.nanoTime();
 //        }
 
-//        if (gameState == titleState) {
-//            ui.draw(graphics2D);
-//        } else {
+        if (stage == GameStage.MainMenu) {
+            ui.draw(graphics2D);
+        } else {
 
             // TILES
             mapManager.draw(graphics2D);
@@ -95,9 +96,9 @@ public class GamePanel extends JPanel implements Runnable {
 //            drawAssets(graphics2D);
 //            assets.clear();
 
-            // UI
-//            ui.draw(graphics2D);
-//        }
+            //UI
+            ui.draw(graphics2D);
+        }
 
         // DEBUG
 //        if (keyHandler.isShowDebugText()) {
@@ -106,7 +107,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 	
 	public void delta() {
-		player.update();
+		
+		if (stage == GameStage.MainMenu) {
+			ui.update();
+		} else {
+			player.update();
+			ui.update();
+		}
+		
 	}
 	
 	@Override
@@ -144,15 +152,14 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		
-		playerName = JOptionPane.showInputDialog("Input Gamertag: ");
 		
-		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
-			socketServer = new GameServer(this);
-			socketServer.start();
-		}
-		
-		socketClient = new GameClient(this, "67.246.103.207");
-		socketClient.start();
+//		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
+//			socketServer = new GameServer(this);
+//			socketServer.start();
+//		}
+//		
+//		socketClient = new GameClient(this, "67.246.103.207");
+//		socketClient.start();
 	}
 
 	public int getScreenWidth() { return screenWidth; }
@@ -161,8 +168,25 @@ public class GamePanel extends JPanel implements Runnable {
 	public Player getPlayer() {	return player; }
 	public void setMousePointer(Point location) { mousePointer = location; }
 	public Point getMousePointer() { return mousePointer; }
-	public void setPlayerName(String name) { playerName = name; }
-	public String getPlayerName() { return playerName; }
 	public GameClient getClient() { return socketClient; }
+
+	public GameStage getGameStage() { return stage; }
+	public void setGameStage(GameStage newStage) { stage = newStage; }
+	public int getScreenCenterX() { return getScreenWidth()/2; }
+	public int getScreenCenterY() { return (getScreenHeight()/2) - 32; }
+
+	public void quitGame() { System.exit(0); }
+
+	public void moveToMultiplayerMenu() {
+		String name = JOptionPane.showInputDialog("Input Gamertag: ");
+		if (name == null) name = "";
+		player = new Player(this, keyHandler, name);
+		setGameStage(GameStage.InGame);
+	}
+
+	public void moveToSingleplayerMenu() {
+		player = new Player(this, keyHandler, "");
+		setGameStage(GameStage.InGame);
+	}
 
 }

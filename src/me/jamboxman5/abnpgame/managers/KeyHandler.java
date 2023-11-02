@@ -125,7 +125,7 @@ public class KeyHandler implements KeyListener {
     private void checkPlayStateKeyPressed(int code) {
         checkMovementKeys(code);
 //        checkGameStateKeys(code);
-//        checkInteractionKeys(code);
+        checkInteractionKeys(code);
 //        checkAdminKeys(code);
     }
 
@@ -161,19 +161,19 @@ public class KeyHandler implements KeyListener {
 //        }
 //    }
 //
-//    private void checkInteractionKeys(int code) {
-//        if (code == KeyEvent.VK_ENTER) {
-//            enterPressed = true;
-//        }
-//
-//        if (code == KeyEvent.VK_SPACE) {
-//            spacePressed = true;
-//        }
-//
-//        if (code == KeyEvent.VK_F) {
-//            projectileKeyPressed = true;
-//        }
-//    }
+    private void checkInteractionKeys(int code) {
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = true;
+        }
+
+        if (code == KeyEvent.VK_F) {
+            projectileKeyPressed = true;
+        }
+    }
 //
 //    private void checkAdminKeys(int code) {
 //        // DEBUG
