@@ -2,6 +2,6 @@ package me.jamboxman5.abnpgame.main;
 
 public enum GameStage {
 
-	MainMenu, JoinMenu, InGame;
+	MainMenu, JoinMenu, InGameSinglePlayer, InGameMultiplayer;
 	
 }

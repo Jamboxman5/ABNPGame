@@ -31,7 +31,8 @@ public class MapManager {
 
 	public void draw(Graphics2D g2) {
 				
-		if (gp.getGameStage() != GameStage.InGame) return;
+		if (gp.getGameStage() != GameStage.InGameSinglePlayer &&
+			gp.getGameStage() != GameStage.InGameMultiplayer) return;
 		
         int screenX = (int) (0 - gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX());
         int screenY = (int) (0 - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY());

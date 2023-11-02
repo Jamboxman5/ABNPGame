@@ -226,7 +226,8 @@ public class Player extends Entity {
 	@Override
 	public void draw(Graphics2D g2) {
 		
-		if (gp.getGameStage() != GameStage.InGame) return;
+		if (gp.getGameStage() != GameStage.InGameSinglePlayer &&
+			gp.getGameStage() != GameStage.InGameMultiplayer) return;
 
 		
 		if (gp.getMousePointer() == null) return;

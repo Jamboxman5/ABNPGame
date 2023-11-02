@@ -20,8 +20,17 @@ public class MouseHandler implements MouseListener {
 //		System.out.println("mousex: " + gp.getMousePointer().getX());
 //		System.out.println("mousey: " + gp.getMousePointer().getY());
 		
-		gp.getClient().sendData("ping".getBytes());
-		System.out.println("clicked");
+		switch(gp.getGameStage()) {
+		case InGameSinglePlayer:
+			break;
+		case InGameMultiplayer:
+
+
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 	@Override

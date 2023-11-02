@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.assets.entity.player.Player;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
 import me.jamboxman5.abnpgame.managers.MapManager;
@@ -19,6 +20,7 @@ import me.jamboxman5.abnpgame.managers.MouseMotionHandler;
 import me.jamboxman5.abnpgame.managers.UIManager;
 import me.jamboxman5.abnpgame.net.GameClient;
 import me.jamboxman5.abnpgame.net.GameServer;
+import me.jamboxman5.abnpgame.net.packets.Packet00Login;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -41,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private final MouseHandler mouseActionHandler = new MouseHandler(this);
 	private final UIManager ui = new UIManager(this, keyHandler);
 	
-	private Player player;
+	public Player player;
 	private Point mousePointer;
 	
 	private GameClient socketClient;
@@ -152,14 +154,6 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		
-		
-//		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
-//			socketServer = new GameServer(this);
-//			socketServer.start();
-//		}
-//		
-//		socketClient = new GameClient(this, "67.246.103.207");
-//		socketClient.start();
 	}
 
 	public int getScreenWidth() { return screenWidth; }
@@ -180,13 +174,28 @@ public class GamePanel extends JPanel implements Runnable {
 	public void moveToMultiplayerMenu() {
 		String name = JOptionPane.showInputDialog("Input Gamertag: ");
 		if (name == null) name = "";
-		player = new Player(this, keyHandler, name);
-		setGameStage(GameStage.InGame);
+		
+		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
+		socketServer = new GameServer(this);
+		socketServer.start();
+		}
+	
+		socketClient = new GameClient(this, "67.246.103.207");
+		socketClient.start();
+		
+		Packet00Login loginPacket = new Packet00Login(name);
+		loginPacket.writeData(socketClient);
+		
+		player = new Player(this, keyHandler, "");
+		
+		setGameStage(GameStage.InGameMultiplayer);
 	}
 
 	public void moveToSingleplayerMenu() {
 		player = new Player(this, keyHandler, "");
-		setGameStage(GameStage.InGame);
+		setGameStage(GameStage.InGameSinglePlayer);
 	}
+
+	public KeyHandler getKeyHandler() { return keyHandler; }
 
 }

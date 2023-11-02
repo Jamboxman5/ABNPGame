@@ -24,7 +24,8 @@ public class UIManager {
 		
 		setupDefaultGraphics(g2);
 		
-		if (gp.getGameStage() == GameStage.InGame) {
+		if (gp.getGameStage() == GameStage.InGameSinglePlayer ||
+			gp.getGameStage() == GameStage.InGameMultiplayer) {
 			drawGameUI(g2);
 		} else if (gp.getGameStage() == GameStage.MainMenu) {
 			drawMainMenu(g2);
