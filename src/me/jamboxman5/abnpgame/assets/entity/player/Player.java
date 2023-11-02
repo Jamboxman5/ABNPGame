@@ -2,31 +2,31 @@ package me.jamboxman5.abnpgame.assets.entity.player;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
-import me.jamboxman5.abnpgame.assets.entity.Entity;
+import me.jamboxman5.abnpgame.assets.entity.Mob;
 import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
 
-public class Player extends Entity {
+public class Player extends Mob {
+	
+	private final static int defaultSpeed = 5;
 	
 	private final KeyHandler keyH;
-	private final GamePanel gp;
-	private final int screenX;
-	private final int screenY;
 	private String gamerTag;
-	double rotation;
 		
 	public Player(GamePanel gamePanel, KeyHandler keyHandler, String name) {
-		super(gamePanel);
+		super(gamePanel, 
+			  name, 
+			  getDefaultX(gamePanel.getMapManager().getActiveMap()), 
+			  getDefaultY(gamePanel.getMapManager().getActiveMap()), 
+			  defaultSpeed);
 
 		keyH = keyHandler;
-		gp = gamePanel;
 		gamerTag = name;
 		
 		screenX = gamePanel.getScreenWidth()/2 - 50;
@@ -36,24 +36,26 @@ public class Player extends Entity {
 //		setImages();
 	}
 
+	private static int getDefaultY(Map activeMap) {
+		if (activeMap.toString().equals("Black_Isle")) {
+			return 670;
+		} else return 400;
+	}
+
+	private static int getDefaultX(Map activeMap) {
+		if (activeMap.toString().equals("Black_Isle")) {
+			return 950;
+		} else return 400;
+	}
+
 	private void setImages() {
 		setSprite(setup("/resources/entity/player/Player_Rifle", 100,80));
 		
 	}
 
-	private void setDefaults() {
-		setDefaultPosition(gp.getMapManager().getActiveMap());
-		
+	private void setDefaults() {		
 		setSpeed(5);
 		setRotation(0);
-	}
-
-
-	private void setDefaultPosition(Map activeMap) {
-		if (activeMap.toString().equals("Black_Isle")) {
-			setWorldX(950);
-			setWorldY(670);
-		}
 	}
 	
 	@Override
@@ -77,151 +79,65 @@ public class Player extends Entity {
                 || keyH.isRightPressed()
                 || keyH.isEnterPressed()
                 || keyH.isSpacePressed()) {
+			
+			if (getAdjustedScreenX() == gp.getMousePointer().getX() &&
+				getAdjustedScreenY() == gp.getMousePointer().getY()) {
+				basicMove();
+				isMoving = true;
+				return;
+			}
             
-            move();
+			double xComp = 0;
+			double yComp = 0;
+			
+			if (direction.equalsIgnoreCase("forward")) {
+				xComp = getSpeed() * Math.cos(rotation);
+				yComp = getSpeed() * Math.sin(rotation);
+			} else if (direction.equalsIgnoreCase("right")) {
+				xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
+				yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
+			} else if (direction.equalsIgnoreCase("left")) {
+				xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
+				yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
+			} else {
+				xComp = getStrafeSpeed() * Math.cos(rotation);
+				yComp = getStrafeSpeed() * Math.sin(rotation);
+			}
+			
+			if (xComp != 0.0 || yComp != 0.0) {
+				move(xComp, yComp);
+	            isMoving = true;
+			} else {
+				isMoving = false;
+			}
+            
             resetEnterPressedValue();
 		}
 	}
 	
-	public void move() {
+	public void basicMove() {
 		
-		if (getAdjustedScreenX() == gp.getMousePointer().getX() &&
-			getAdjustedScreenY() == gp.getMousePointer().getY()) {
-			switch (getDirection()) {
-	        case "forward":
-	        	setWorldY(getWorldY() - getStrafeSpeed());
-	        	break;
-	        case "back": 
-	        	setWorldY(getWorldY() + getStrafeSpeed());
-	        	break;
-	        case "left": 
-	        	setWorldX(getWorldX() - getStrafeSpeed());
-	        	break;
-	        case "right": 
-	        	setWorldX(getWorldX() + getStrafeSpeed());
-	        	break;
-			}
-		} else {
-			switch (getDirection()) {
-	        case "forward":
-	        	mfw();
-	        	break;
-	        case "back": 
-	        	mbk();
-	        	break;
-	        case "left": 
-	        	mlt();
-	        	break;
-	        case "right": 
-	        	mrt();
-	        	break;
-			}
+		
+		switch (getDirection()) {
+	    	case "forward":
+	    		setWorldY(getWorldY() - getStrafeSpeed());
+	    		break;
+	    	case "back": 
+	    		setWorldY(getWorldY() + getStrafeSpeed());
+	    		break;
+	    	case "left": 
+	    		setWorldX(getWorldX() - getStrafeSpeed());
+	    		break;
+	    	case "right": 
+	    		setWorldX(getWorldX() + getStrafeSpeed());
+	    		break;
 		}
+	
 
 		
 	}
 	
-	public void mfw() {
-		
-		if (gp.getMousePointer() == null) return;
-
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
-			double xComp = getSpeed() * Math.cos(rotation);
-			double yComp = getSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
-			double xComp = getSpeed() * Math.cos(rotation);
-			double yComp = getSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() - xComp);
-			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenY() < gp.getMousePointer().getY()) {
-			double xComp = getSpeed() * Math.cos(rotation);
-			double yComp = getSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() - xComp);
-			setWorldY(getWorldY() - yComp);
-		} else {
-			double xComp = getSpeed() * Math.cos(rotation);
-			double yComp = getSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() - xComp);
-			setWorldY(getWorldY() - yComp);
-		}
-	}
-	public void mbk() {
-		if (gp.getMousePointer() == null) return;
-
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation);
-			double yComp = getStrafeSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() - xComp);
-			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation);
-			double yComp = getStrafeSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else if (getAdjustedScreenY() < gp.getMousePointer().getY()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation);
-			double yComp = getStrafeSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else {
-			double xComp = getStrafeSpeed() * Math.cos(rotation);
-			double yComp = getStrafeSpeed() * Math.sin(rotation);
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		}
-	}
-	public void mrt() {
-		if (gp.getMousePointer() == null) return;
-
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
-			setWorldX(getWorldX() - xComp);
-			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else if (getAdjustedScreenY() < gp.getMousePointer().getY()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else {
-			double xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		}
-	}
-	public void mlt() {
-		if (gp.getMousePointer() == null) return;
-
-		if (getAdjustedScreenX() < gp.getMousePointer().getX()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
-			setWorldX(getWorldX() - xComp);
-			setWorldY(getWorldY() - yComp);
-		} else if (getAdjustedScreenX() > gp.getMousePointer().getX()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else if (getAdjustedScreenY() < gp.getMousePointer().getY()) {
-			double xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		} else {
-			double xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
-			double yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
-			setWorldX(getWorldX() + xComp);
-			setWorldY(getWorldY() + yComp);
-		}
-	}
+	
 	
 	@Override
 	public void draw(Graphics2D g2) {
@@ -277,7 +193,6 @@ public class Player extends Entity {
 		g2.fillOval(x-5, y-5, 10, 10);
 		
 		
-		
 	}
 
 	
@@ -301,18 +216,15 @@ public class Player extends Entity {
 	public double getRotation() { return rotation; }
 	public void setName(String newName) { gamerTag = newName; }
 	public String getName() { return gamerTag; }
-	public int getAdjustedScreenX() {
-		int rightOffset = gp.getScreenWidth() - screenX;
-		int x = rightOffset - 50;
-		return x;
-	}
-	public int getAdjustedScreenY() {
-		int bottomOffset = gp.getScreenHeight() - screenY - 32;
-		int y = bottomOffset - 40;
-		return y;
-	}
+	
 	public double getStrafeSpeed() {
 		return getSpeed() *.65;
+	}
+
+	@Override
+	public boolean hasCollided(double xComp, double yComp) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

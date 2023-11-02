@@ -12,15 +12,15 @@ import me.jamboxman5.abnpgame.util.Utilities;
 
 public abstract class Entity {
 	
-	private final GamePanel gp;
+	protected final GamePanel gp;
 	
 	private BufferedImage sprite;
 	
-	private double worldX, worldY;
-	private String name;
-	private double speed;
+	protected double worldX, worldY;
+	protected String name;
+	protected double speed;
 	
-	private String direction;
+	protected String direction;
 	private int spriteCounter = 0;
 	private int spriteNumber = 1;
 	
@@ -34,10 +34,8 @@ public abstract class Entity {
 	public void setWorldY(double y) { worldY = y; }
 	public void setSpeed(double speed) { this.speed = speed; }
 
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void update();
+	public abstract void draw(Graphics2D g2);
 	
 	public BufferedImage setup(String imagePath, int width, int height) {
         BufferedImage image = null;
@@ -77,10 +75,5 @@ public abstract class Entity {
 	public double getWorldX() { return worldX; }
 	public double getWorldY() { return worldY; }
 	public String getDirection() { return direction; }
-
-	public void draw(Graphics2D g2) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

@@ -62,6 +62,7 @@ public class GameServer extends Thread {
 			Packet00Login packet = new Packet00Login(data);
 			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + packet.getUsername() + " has connected.");
 			OnlinePlayer player = null;
+			System.out.println(address.getHostAddress());
 			if (address.getHostAddress().equalsIgnoreCase("127.0.0.1")) {
 				player = new OnlinePlayer(gp, gp.getKeyHandler(), packet.getUsername(), address, port);
 			} else {
@@ -69,7 +70,6 @@ public class GameServer extends Thread {
 			}
 			if (player != null) {
 				connectedPlayers.add(player);
-				gp.player = player;
 			}
 			break;
 		case DISCONNECT:

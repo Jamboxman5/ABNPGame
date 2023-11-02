@@ -186,7 +186,7 @@ public class GamePanel extends JPanel implements Runnable {
 		Packet00Login loginPacket = new Packet00Login(name);
 		loginPacket.writeData(socketClient);
 		
-		player = new Player(this, keyHandler, "");
+		player = new Player(this, keyHandler, name);
 		
 		setGameStage(GameStage.InGameMultiplayer);
 	}
