@@ -63,10 +63,10 @@ public class GameServer extends Thread {
 			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + packet.getUsername() + " has connected.");
 			OnlinePlayer player = null;
 			System.out.println(address.getHostAddress());
-			if (address.getHostAddress().equalsIgnoreCase("127.0.0.1")) {
+			if (address.getHostAddress().equalsIgnoreCase(socket.getInetAddress().getHostAddress())) {
 				player = new OnlinePlayer(gp, gp.getKeyHandler(), packet.getUsername(), address, port);
 			} else {
-				player = new OnlinePlayer(gp, gp.getKeyHandler(), packet.getUsername(), address, port);
+				player = new OnlinePlayer(gp, packet.getUsername(), address, port);
 			}
 			if (player != null) {
 				connectedPlayers.add(player);
