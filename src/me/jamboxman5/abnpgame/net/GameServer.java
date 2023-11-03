@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
-import me.jamboxman5.abnpgame.assets.entity.player.Player;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.net.packets.Packet;
 import me.jamboxman5.abnpgame.net.packets.Packet.PacketTypes;
@@ -40,7 +39,7 @@ public class GameServer extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			parsePacket(packet.getData(), packet.getAddress(), packet.getPort());
+			this.parsePacket(packet.getData(), packet.getAddress(), packet.getPort());
 //			String message = new String(packet.getData()).trim();
 //			System.out.println("CLIENT [" + packet.getAddress().getHostAddress() + ":" + packet.getPort() + "] > " + message);
 //			if (message.equalsIgnoreCase("ping")) {
@@ -53,25 +52,43 @@ public class GameServer extends Thread {
 	private void parsePacket(byte[] data, InetAddress address, int port) {
 		String message = new String(data).trim();
 		PacketTypes type = Packet.lookupPacket(message.substring(0,2));
+		Packet packet = null;
 		switch (type) {
 		default:
 			break;
 		case INVALID:
 			break;
 		case LOGIN:
-			Packet00Login packet = new Packet00Login(data);
-			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + packet.getUsername() + " has connected.");
-			if (address.getHostAddress().contains("67.246.103.207") && gp.player == null) {
-				OnlinePlayer player = new OnlinePlayer(gp, gp.getKeyHandler(), packet.getUsername(), address, port);
-				gp.player = player;
-			} else {
-				OnlinePlayer player = new OnlinePlayer(gp, packet.getUsername(), address, port);
-				connectedPlayers.add(player);
-				gp.getMapManager().addEntity(player);
-			}
+			packet = new Packet00Login(data);
+			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet00Login)packet).getUsername() + " has connected.");
+			OnlinePlayer player = new OnlinePlayer(gp, ((Packet00Login)packet).getUsername(), address, port);
+			this.addConnection(player, (Packet00Login)packet);
 			break;
 		case DISCONNECT:
 			break;
+		}
+	}
+
+	public void addConnection(OnlinePlayer player, Packet00Login packet) {
+		boolean alreadyConnected = false;
+		for (OnlinePlayer p : connectedPlayers) {
+			if (player.getUsername().equalsIgnoreCase(p.getUsername())) {
+				if (p.ipAddress == null) {
+					p.ipAddress = player.ipAddress;
+				}
+				
+				if (p.port == -1) {
+					p.port = player.port;
+				}
+				alreadyConnected = true;
+			} else {
+				sendData(packet.getData(), p.ipAddress, p.port);
+				packet = new Packet00Login(p.getUsername());
+				sendData(packet.getData(), player.ipAddress, player.port);
+			}
+		}
+		if (!alreadyConnected) {
+			connectedPlayers.add(player);
 		}
 	}
 

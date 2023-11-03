@@ -186,14 +186,18 @@ public class GamePanel extends JPanel implements Runnable {
 		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
 		socketServer = new GameServer(this);
 		socketServer.start();
-		} else {
-			player = new Player(this, keyHandler, name);
 		}
-	
-		socketClient = new GameClient(this, "67.246.103.207");
+		
+		socketClient = new GameClient(this, "localhost");
 		socketClient.start();
 		
+		player = new OnlinePlayer(this, keyHandler, name, null, -1);
 		Packet00Login loginPacket = new Packet00Login(name);
+
+		if (socketServer != null) {
+			socketServer.addConnection((OnlinePlayer) player, loginPacket);
+		}
+		
 		loginPacket.writeData(socketClient);
 		
 		

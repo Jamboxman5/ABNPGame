@@ -7,7 +7,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.net.packets.Packet;
+import me.jamboxman5.abnpgame.net.packets.Packet00Login;
+import me.jamboxman5.abnpgame.net.packets.Packet.PacketTypes;
 
 public class GameClient extends Thread {
 
@@ -36,8 +40,30 @@ public class GameClient extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			this.parsePacket(packet.getData(), packet.getAddress(), packet.getPort());
+
 			String message = new String(packet.getData()).trim();
-			System.out.println("SERVER > " + message);		
+//			System.out.println("SERVER > " + message);		
+		}
+	}
+	
+	private void parsePacket(byte[] data, InetAddress address, int port) {
+		String message = new String(data).trim();
+		PacketTypes type = Packet.lookupPacket(message.substring(0,2));
+		Packet packet = null;
+		switch (type) {
+		default:
+			break;
+		case INVALID:
+			break;
+		case LOGIN:
+			packet = new Packet00Login(data);
+			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet00Login)packet).getUsername() + " has joined the game.");
+			OnlinePlayer player = new OnlinePlayer(gp, ((Packet00Login)packet).getUsername(), address, port);
+			gp.getMapManager().addEntity(player);
+			break;
+		case DISCONNECT:
+			break;
 		}
 	}
 	

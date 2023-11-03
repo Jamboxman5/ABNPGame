@@ -189,7 +189,7 @@ public class Player extends Mob {
 		g2.setStroke(new BasicStroke());
 	    g2.setTransform(old);
 	    
-		g2.setColor(Color.yellow);
+	    g2.setColor(Color.yellow);
 		g2.fillOval(x-5, y-5, 10, 10);
 		
 		
@@ -226,5 +226,6 @@ public class Player extends Mob {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	public String getUsername() { return name; }
 
 }

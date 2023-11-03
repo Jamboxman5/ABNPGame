@@ -73,8 +73,8 @@ public class UIManager {
 			if (e instanceof OnlinePlayer) {
 				g2.setColor(Color.white);
 		        g2.setFont(new Font("Courier New", Font.BOLD, 20));
-		        int x = (int) (e.getWorldX() - gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX());
-		        int y = (int) (e.getWorldY() - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY());
+		        int x = (int) (e.getWorldX() - gp.getPlayer().getWorldX() + gp.getPlayer().getAdjustedScreenX());
+		        int y = (int) (e.getWorldY() - gp.getPlayer().getWorldY() + gp.getPlayer().getAdjustedScreenY());
 		        String name = e.getName(); 
 		        int length = (int) g2.getFontMetrics().getStringBounds(name, g2).getWidth();
 		        g2.drawString(name, x - (length/2), y - 40);

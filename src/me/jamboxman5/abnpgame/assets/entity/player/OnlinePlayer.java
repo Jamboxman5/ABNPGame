@@ -52,8 +52,8 @@ public class OnlinePlayer extends Player {
 			
 			//DRAW PLAYER
 			
-			double x = worldX - gp.getPlayer().getWorldX() + gp.getPlayer().getAdjustedScreenX();
-	        double y = worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getAdjustedScreenY();
+			int x = (int) (worldX - gp.getPlayer().getWorldX() + gp.getPlayer().getAdjustedScreenX());
+	        int y = (int) (worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getAdjustedScreenY());
 						
 			g2.setColor(Color.red);
 			AffineTransform tx = new AffineTransform();
@@ -68,6 +68,11 @@ public class OnlinePlayer extends Player {
 		    
 			g2.setStroke(new BasicStroke());
 		    g2.setTransform(old);
+		    
+		    if (gp.getPlayer() == this) {
+		    	g2.setColor(Color.yellow);
+				g2.fillOval(x-5, y-5, 10, 10);
+		    }
 	}
 
 }
