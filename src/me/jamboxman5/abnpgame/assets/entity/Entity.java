@@ -76,4 +76,12 @@ public abstract class Entity {
 	public double getWorldY() { return worldY; }
 	public String getDirection() { return direction; }
 
+	public String getName() { return name; }
+	public int getScreenY() {
+		return (int) (worldX - gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX());
+	}
+	public int getScreenX() {
+		return (int) (worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY());
+	}
+
 }

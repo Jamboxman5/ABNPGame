@@ -82,12 +82,16 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (stage == GameStage.MainMenu) {
             ui.draw(graphics2D);
+            if (getMousePosition() != null) {
+            	mouseMotionHandler.draw(graphics2D);
+            }
         } else {
-
+        	if (player == null) return;
             // TILES
             mapManager.draw(graphics2D);
-            player.draw(graphics2D);
-            if (getMousePosition() != null) {
+			mapManager.drawEntities(graphics2D);
+			player.draw(graphics2D);
+			if (getMousePosition() != null) {
             	mouseMotionHandler.draw(graphics2D);
             }
 //            drawInteractiveTiles(graphics2D);
@@ -113,8 +117,10 @@ public class GamePanel extends JPanel implements Runnable {
 		if (stage == GameStage.MainMenu) {
 			ui.update();
 		} else {
+			if (player == null) return;
 			player.update();
 			ui.update();
+			mapManager.updateEntities();
 		}
 		
 	}
@@ -143,8 +149,8 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
 		graphics2D = (Graphics2D) tempScreen.getGraphics();
-		mouseMotionHandler.setupCursor("Cursor_Reticle");
-		
+		mouseMotionHandler.setupCursor("Cursor_Pointer");
+
 	}
 
 	public void start() {
@@ -172,12 +178,16 @@ public class GamePanel extends JPanel implements Runnable {
 	public void quitGame() { System.exit(0); }
 
 	public void moveToMultiplayerMenu() {
+		mouseMotionHandler.setupCursor("Cursor_Reticle");
+
 		String name = JOptionPane.showInputDialog("Input Gamertag: ");
 		if (name == null) name = "";
 		
 		if (JOptionPane.showConfirmDialog(this, "Run as server?") == 0) {
 		socketServer = new GameServer(this);
 		socketServer.start();
+		} else {
+			player = new Player(this, keyHandler, name);
 		}
 	
 		socketClient = new GameClient(this, "67.246.103.207");
@@ -186,12 +196,12 @@ public class GamePanel extends JPanel implements Runnable {
 		Packet00Login loginPacket = new Packet00Login(name);
 		loginPacket.writeData(socketClient);
 		
-		player = new Player(this, keyHandler, name);
 		
 		setGameStage(GameStage.InGameMultiplayer);
 	}
 
 	public void moveToSingleplayerMenu() {
+		mouseMotionHandler.setupCursor("Cursor_Reticle");
 		player = new Player(this, keyHandler, "");
 		setGameStage(GameStage.InGameSinglePlayer);
 	}

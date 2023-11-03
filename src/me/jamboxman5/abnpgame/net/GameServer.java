@@ -61,15 +61,13 @@ public class GameServer extends Thread {
 		case LOGIN:
 			Packet00Login packet = new Packet00Login(data);
 			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + packet.getUsername() + " has connected.");
-			OnlinePlayer player = null;
-			System.out.println(address.getHostAddress());
-			if (address.getHostAddress().equalsIgnoreCase(socket.getInetAddress().getHostAddress())) {
-				player = new OnlinePlayer(gp, gp.getKeyHandler(), packet.getUsername(), address, port);
+			if (address.getHostAddress().contains("67.246.103.207") && gp.player == null) {
+				OnlinePlayer player = new OnlinePlayer(gp, gp.getKeyHandler(), packet.getUsername(), address, port);
+				gp.player = player;
 			} else {
-				player = new OnlinePlayer(gp, packet.getUsername(), address, port);
-			}
-			if (player != null) {
+				OnlinePlayer player = new OnlinePlayer(gp, packet.getUsername(), address, port);
 				connectedPlayers.add(player);
+				gp.getMapManager().addEntity(player);
 			}
 			break;
 		case DISCONNECT:

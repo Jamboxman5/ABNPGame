@@ -16,7 +16,7 @@ public class Player extends Mob {
 	
 	private final static int defaultSpeed = 5;
 	
-	private final KeyHandler keyH;
+	protected final KeyHandler keyH;
 	private String gamerTag;
 		
 	public Player(GamePanel gamePanel, KeyHandler keyHandler, String name) {

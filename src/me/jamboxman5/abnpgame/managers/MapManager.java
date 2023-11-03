@@ -3,10 +3,13 @@ package me.jamboxman5.abnpgame.managers;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
@@ -15,6 +18,8 @@ import me.jamboxman5.abnpgame.util.Utilities;
 public class MapManager {
 	
 	private final GamePanel gp;
+	
+	public List<Entity> entities = new ArrayList<>();
 	
 	Map m;
 	
@@ -30,6 +35,8 @@ public class MapManager {
 	}
 
 	public void draw(Graphics2D g2) {
+		
+		if (gp.getPlayer() == null) return;
 				
 		if (gp.getGameStage() != GameStage.InGameSinglePlayer &&
 			gp.getGameStage() != GameStage.InGameMultiplayer) return;
@@ -48,7 +55,15 @@ public class MapManager {
                 RenderingHints.VALUE_STROKE_PURE);
 		
 		g2.drawImage(m.getImage(), screenX, screenY, null);
-
+		
+	}
+	
+	public void updateEntities() {
+		for (Entity e : entities) { e.update(); }
+	}
+	
+	public void drawEntities(Graphics2D g2) {
+		for (Entity e : entities) { e.draw(g2); }
 	}
 	
 	public void setup(String imageName) {
@@ -62,5 +77,8 @@ public class MapManager {
     }
 
 	public Map getActiveMap() {	return m; }
+	
+	public void addEntity(Entity entity) { entities.add(entity); }
 
+	public List<Entity> getEntities() { return entities; }
 }

@@ -1,10 +1,14 @@
 package me.jamboxman5.abnpgame.managers;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import me.jamboxman5.abnpgame.assets.entity.Entity;
+import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.util.Utilities;
@@ -65,11 +69,25 @@ public class UIManager {
 	}
 	
 	private void drawGameUI(Graphics2D g2) {
+		for (Entity e : gp.getMapManager().getEntities()) {
+			if (e instanceof OnlinePlayer) {
+				g2.setColor(Color.white);
+		        g2.setFont(new Font("Courier New", Font.BOLD, 20));
+		        int x = (int) (e.getWorldX() - gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX());
+		        int y = (int) (e.getWorldY() - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY());
+		        String name = e.getName(); 
+		        int length = (int) g2.getFontMetrics().getStringBounds(name, g2).getWidth();
+		        g2.drawString(name, x - (length/2), y - 40);
+			}
+		}
 		g2.setColor(Color.white);
         g2.setFont(new Font("Courier New", Font.BOLD, 20));
-        String name = gp.getPlayer().getName();
+        int x = gp.getPlayer().getAdjustedScreenX();
+        int y = gp.getPlayer().getAdjustedScreenY();
+        String name = gp.getPlayer().getName(); 
         int length = (int) g2.getFontMetrics().getStringBounds(name, g2).getWidth();
-        g2.drawString(name, gp.getScreenCenterX() - (length/2), gp.getScreenCenterY() - 40);
+        g2.drawString(name, x - (length/2), y - 40);
+		
 	}
 	
 	private void drawMainMenu(Graphics2D g2) {
@@ -78,36 +96,94 @@ public class UIManager {
 		
 		setupDefaultGraphics(g2);
 		
-		g2.setColor(Color.white);
 		String title = "ABNP GAME";
-        int length = (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth();
-        g2.setFont(new Font("Courier New", Font.BOLD, 160));
-        g2.drawString(title, Utilities.getXForCenterOfText(title, gp, g2), gp.getScreenCenterY() - 50);
+        g2.setFont(new Font("Courier New", Font.BOLD, 180));
+
+        Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
+        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+		g2.setComposite(comp);
+        
+		g2.setColor(Color.black);
+        g2.drawString(title, 60+Utilities.getTextHeight(title, g2)/12, 180+Utilities.getTextHeight(title, g2)/12);
+		
+		g2.setComposite(old);
+
+        g2.setColor(Color.white);
+        g2.drawString(title, 60, 180);
+       
+        
         
         g2.setFont(new Font("Courier New", Font.PLAIN, 60));
         
-        int x = Utilities.getXForCenterOfText("Singleplayer", gp, g2);
-        int y = gp.getScreenCenterY() + 120;
+        int x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,"Singleplayer", g2);
+        int y = gp.getScreenCenterY() + 180;
         int spacer = 70;
         
+        g2.setComposite(comp);
+        
+		g2.setColor(Color.black);
+        g2.drawString("Singleplayer", x+3, y+3);
+		
+		g2.setComposite(old);
+
+        g2.setColor(Color.white);
         g2.drawString("Singleplayer", x, y);
+        
         if (menuIndex == 0) {
-        	g2.drawString(">", x - 80, y);
+        	g2.setComposite(comp);
+            
+    		g2.setColor(Color.black);
+            g2.drawString(">", x-80+3, y+3);
+    		
+    		g2.setComposite(old);
+
+            g2.setColor(Color.white);
+            g2.drawString(">", x-80, y);        
         }
         y+=spacer;
         
-        x = Utilities.getXForCenterOfText("Multiplayer", gp, g2);
-        g2.drawString("Multiplayer", x, y);
+        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Multiplayer", g2);
+        g2.setComposite(comp);
+        
+		g2.setColor(Color.black);
+        g2.drawString("Multiplayer", x+3, y+3);
+		
+		g2.setComposite(old);
+
+        g2.setColor(Color.white);
+        g2.drawString("Multiplayer", x, y);        
         if (menuIndex == 1) {
-        	g2.drawString(">", x - 80, y);
-        }
+        	g2.setComposite(comp);
+            
+    		g2.setColor(Color.black);
+            g2.drawString(">", x-80+3, y+3);
+    		
+    		g2.setComposite(old);
+
+            g2.setColor(Color.white);
+            g2.drawString(">", x-80, y);         }
         
         y+= spacer;
-        x = Utilities.getXForCenterOfText("Quit Game", gp, g2);
-        g2.drawString("Quit Game", x, y);
+        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Quit Game", g2);
+        g2.setComposite(comp);
+        
+		g2.setColor(Color.black);
+        g2.drawString("Quit Game", x+3, y+3);
+		
+		g2.setComposite(old);
+
+        g2.setColor(Color.white);
+        g2.drawString("Quit Game", x, y);     
         if (menuIndex == 2) {
-        	g2.drawString(">", x - 80, y);
-        }
+        	g2.setComposite(comp);
+            
+    		g2.setColor(Color.black);
+            g2.drawString(">", x-80+3, y+3);
+    		
+    		g2.setComposite(old);
+
+            g2.setColor(Color.white);
+            g2.drawString(">", x-80, y);         }
     
 	}
 	

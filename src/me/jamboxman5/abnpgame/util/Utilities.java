@@ -25,9 +25,21 @@ public class Utilities {
         return scaledImage;
     }
 
-    public static int getXForCenterOfText(String text, GamePanel gamePanel, Graphics2D graphics2D) {
+    public static int getXForScreenCenteredText(String text, GamePanel gamePanel, Graphics2D graphics2D) {
         int length = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
         return gamePanel.getScreenWidth() / 2 - length / 2;
+    }
+    public static int getXForCenteredText(int centeredX, String text, Graphics2D graphics2D) {
+        int length = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
+        return centeredX - length / 2;
+    }
+    public static int getXForRightAlignedText(int rightX, String text, Graphics2D graphics2D) {
+        int length = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
+        return rightX - length;
+    }
+    public static int getTextHeight(String text, Graphics2D graphics2D) {
+        int height = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getHeight();
+        return height;
     }
 //
 //    public static int getXForAlightToRightOfText(String text, int tailX, GamePanel gamePanel, Graphics2D graphics2D) {
