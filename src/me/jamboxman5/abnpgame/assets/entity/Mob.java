@@ -12,7 +12,6 @@ public abstract class Mob extends Entity {
 	
 	protected int screenX;
 	protected int screenY;
-	protected double rotation;
 	
 	public Mob(GamePanel gamePanel, String type, int x, int y, int speed) {
 		super(gamePanel);

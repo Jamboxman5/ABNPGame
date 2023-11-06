@@ -1,7 +1,9 @@
 package me.jamboxman5.abnpgame.assets.entity.player;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
@@ -22,8 +24,8 @@ public class Player extends Mob {
 	public Player(GamePanel gamePanel, KeyHandler keyHandler, String name) {
 		super(gamePanel, 
 			  name, 
-			  getDefaultX(gamePanel.getMapManager().getActiveMap()), 
-			  getDefaultY(gamePanel.getMapManager().getActiveMap()), 
+			  gamePanel.getMapManager().getActiveMap().getDefaultX(), 
+			  gamePanel.getMapManager().getActiveMap().getDefaultY(), 
 			  defaultSpeed);
 
 		keyH = keyHandler;
@@ -33,19 +35,7 @@ public class Player extends Mob {
 		screenY = gamePanel.getScreenHeight()/2 - 50;
 		
 		setDefaults();
-//		setImages();
-	}
-
-	private static int getDefaultY(Map activeMap) {
-		if (activeMap.toString().equals("Black_Isle")) {
-			return 670;
-		} else return 400;
-	}
-
-	private static int getDefaultX(Map activeMap) {
-		if (activeMap.toString().equals("Black_Isle")) {
-			return 950;
-		} else return 400;
+		setImages();
 	}
 
 	private void setImages() {
@@ -54,12 +44,17 @@ public class Player extends Mob {
 	}
 
 	private void setDefaults() {		
-		setSpeed(5);
+		setSpeed(6.5);
 		setRotation(0);
 	}
 	
 	@Override
 	public void update() {
+		if (isMoving && gp.getZoom() >= .75) {
+			gp.zoomOut();
+		} else if (!isMoving && gp.getZoom() <= 1) {
+			gp.zoomIn();
+		}
 		
 		setRotation(getAngleToCursor());
 		
@@ -76,9 +71,7 @@ public class Player extends Mob {
 		if (keyH.isForwardPressed()
                 || keyH.isBackPressed()
                 || keyH.isLeftPressed()
-                || keyH.isRightPressed()
-                || keyH.isEnterPressed()
-                || keyH.isSpacePressed()) {
+                || keyH.isRightPressed()) {
 			
 			if (getAdjustedScreenX() == gp.getMousePointer().getX() &&
 				getAdjustedScreenY() == gp.getMousePointer().getY()) {
@@ -90,28 +83,69 @@ public class Player extends Mob {
 			double xComp = 0;
 			double yComp = 0;
 			
-			if (direction.equalsIgnoreCase("forward")) {
-				xComp = getSpeed() * Math.cos(rotation);
-				yComp = getSpeed() * Math.sin(rotation);
-			} else if (direction.equalsIgnoreCase("right")) {
+			if (keyH.isForwardPressed()) {
+				if (keyH.isLeftPressed()) {
+	            	xComp = getStrafeSpeed() * Math.cos(rotation);
+					yComp = getStrafeSpeed() * Math.sin(rotation);
+					xComp += (getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90)));
+					yComp += (getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90)));
+					move(xComp, yComp);
+		            isMoving = true;
+				} else if (keyH.isRightPressed()) {
+					xComp = getStrafeSpeed() * Math.cos(rotation);
+					yComp = getStrafeSpeed() * Math.sin(rotation);
+					xComp += (getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90)));
+					yComp += (getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90)));
+					move(xComp, yComp);
+		            isMoving = true;
+				} else {
+					xComp = getSpeed() * Math.cos(rotation);
+					yComp = getSpeed() * Math.sin(rotation);
+					move(xComp, yComp);
+		            isMoving = true;
+				}
+			} else if (keyH.isBackPressed()) {
+				if (keyH.isRightPressed()) {
+					xComp = (getStrafeSpeed() * Math.cos(rotation));
+					yComp = (getStrafeSpeed() * Math.sin(rotation));
+					xComp += (getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90)))/2;
+					yComp += (getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90)))/2;
+					move(xComp, yComp);
+		            isMoving = true;
+				} else if (keyH.isLeftPressed()) {
+					xComp = (getStrafeSpeed() * Math.cos(rotation));
+					yComp = (getStrafeSpeed() * Math.sin(rotation));
+					xComp += (getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90)))/2;
+					yComp += (getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90)))/2;
+					move(xComp, yComp);
+		            isMoving = true;
+				} else {
+					xComp = getStrafeSpeed() * Math.cos(rotation);
+					yComp = getStrafeSpeed() * Math.sin(rotation);
+					move(xComp, yComp);
+		            isMoving = true;
+				}
+			} else if (keyH.isRightPressed()) {
 				xComp = getStrafeSpeed() * Math.cos(rotation - Math.toRadians(90));
 				yComp = getStrafeSpeed() * Math.sin(rotation - Math.toRadians(90));
-			} else if (direction.equalsIgnoreCase("left")) {
-				xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
-				yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
-			} else {
-				xComp = getStrafeSpeed() * Math.cos(rotation);
-				yComp = getStrafeSpeed() * Math.sin(rotation);
-			}
-			
-			if (xComp != 0.0 || yComp != 0.0) {
 				move(xComp, yComp);
 	            isMoving = true;
+			} else if (keyH.isLeftPressed()) {
+				xComp = getStrafeSpeed() * Math.cos(rotation + Math.toRadians(90));
+				yComp = getStrafeSpeed() * Math.sin(rotation + Math.toRadians(90));
+				move(xComp, yComp);
+	            isMoving = true;
+			} 
+			
+			if (xComp != 0.0 || yComp != 0.0) {
+				
 			} else {
 				isMoving = false;
 			}
             
             resetEnterPressedValue();
+		} else {
+			isMoving = false;
 		}
 	}
 	
@@ -137,72 +171,88 @@ public class Player extends Mob {
 		
 	}
 	
-	
-	
 	@Override
 	public void draw(Graphics2D g2) {
-		
 		if (gp.getGameStage() != GameStage.InGameSinglePlayer &&
-			gp.getGameStage() != GameStage.InGameMultiplayer) return;
+				gp.getGameStage() != GameStage.InGameMultiplayer) return;
 
-		
-		if (gp.getMousePointer() == null) return;
-				
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY);
-		g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
-                RenderingHints.VALUE_STROKE_PURE);
-		
-		//DRAW PLAYER
-		
-		int x = getAdjustedScreenX();
-		
-		int y = getAdjustedScreenY();
-		
-		
-		g2.setColor(Color.RED);
-		try {
-		    g2.setStroke(new BasicStroke(2));
-		    g2.drawLine(x, y, (int)gp.getMousePointer().getX(), (int)gp.getMousePointer().getY());
-		} catch (NullPointerException e) {
 			
-		}	
-		
-		double angle = 0;
-		if (x != gp.getMousePointer().getX() &&
-			y != gp.getMousePointer().getY()) {
-			angle = getAngleToCursor();
-		}
-		
-		AffineTransform tx = new AffineTransform();
-	    AffineTransform old = g2.getTransform();
-	    tx.setToTranslation(x, y);
-	    tx.rotate(angle);
-	    g2.transform(tx);
-	    g2.fillRect(-20, -20, 40, 40);
-	    g2.setStroke(new BasicStroke(4));
-		g2.setColor(Color.white);
-		g2.drawRect(-20, -20, 40, 40);
-	    
-		g2.setStroke(new BasicStroke());
-	    g2.setTransform(old);
-	    
-	    g2.setColor(Color.yellow);
-		g2.fillOval(x-5, y-5, 10, 10);
-		
-		
+			if (gp.getMousePointer() == null) return;
+					
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+	                RenderingHints.VALUE_ANTIALIAS_ON);
+			g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+	                RenderingHints.VALUE_RENDER_QUALITY);
+			g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
+	                RenderingHints.VALUE_STROKE_PURE);
+			
+			//DRAW PLAYER
+			
+			int x = (int) (worldX - gp.getPlayer().getWorldX() + gp.getPlayer().getAdjustedScreenX());
+	        int y = (int) (worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getAdjustedScreenY());
+						
+			g2.setColor(Color.red);
+			
+			AffineTransform tx = new AffineTransform();
+		    AffineTransform oldTrans = g2.getTransform();
+			
+		    tx.setToTranslation(x, y);
+		    
+			if (gp.getPlayer().equals(this)) {
+				Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
+		        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+		        g2.setComposite(comp);
+				g2.setStroke(new BasicStroke(2));
+			    g2.drawLine(x, y, (int)gp.getMousePointer().getX(), (int)gp.getMousePointer().getY());
+			    g2.fillOval((int)gp.getMousePointer().getX()-2, (int)gp.getMousePointer().getY()-2, 4, 4);
+			    g2.setComposite(old);
+			    g2.setColor(new Color(255,200,200));
+			    g2.fillOval((int)gp.getMousePointer().getX()-1, (int)gp.getMousePointer().getY()-1, 1, 1);
+
+			    if (gp.getMousePointer().getX() == getAdjustedScreenX() &&
+				   	gp.getMousePointer().getY() == getAdjustedScreenY()) {
+				   	tx.rotate(0);
+				} else {
+					tx.rotate(0);
+					tx.rotate(getDrawingAngle());
+				}
+			} else {
+				
+			}
+			
+		    
+		    g2.transform(tx);
+
+		    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(22*gp.getZoom())), null);
+		    g2.setTransform(oldTrans);
+
 	}
 
 	
 
-	private double getAngleToCursor() {
+	public double getAngleToCursor() {
 		try {
-			double num = (gp.getHeight()/2) - 22 - gp.getMousePointer().getY();
-			double denom = (gp.getWidth()/2) - gp.getMousePointer().getX();
+			double num = getAdjustedScreenY() - gp.getMousePointer().getY();
+			double denom = getAdjustedScreenX() - gp.getMousePointer().getX();
 			return Math.atan(num/denom);
 		} catch (NullPointerException e) {
+			return 0;
+		}
+		
+	}
+	
+	public double getDrawingAngle() {
+		try {
+			double num = getAdjustedScreenY() - gp.getMousePointer().getY();
+			double denom = getAdjustedScreenX() - gp.getMousePointer().getX();
+			double angle = Math.atan(num/denom);
+			if ((int)gp.getMousePointer().getX() <= getAdjustedScreenX()) {
+				   return angle - Math.toRadians(180);
+			   } else {
+				   return angle;
+			   }
+		} catch (NullPointerException e) {
+			e.printStackTrace();
 			return 0;
 		}
 		

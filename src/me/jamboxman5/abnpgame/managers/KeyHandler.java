@@ -4,14 +4,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.main.GameStage;
 
 public class KeyHandler implements KeyListener {
 
-    private boolean forwardPressed, backPressed, leftPressed, rightPressed, enterPressed, spacePressed, projectileKeyPressed;
+    private boolean forwardPressed, backPressed, leftPressed, rightPressed, enterPressed, spacePressed, escapePressed;
     private final GamePanel gamePanel;
 
     // DEBUG
-    private boolean showDebugText = false;
+    private boolean debugPressed = false;
 
     public KeyHandler(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -21,14 +22,16 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
-//        if (gamePanel.getGameState() == gamePanel.getTitleState()) {
-//            checkTitleStateKeyPressed(code);
+        if (gamePanel.getGameStage() == GameStage.MainMenu) {
+        	checkMainMenuKeyPressed(code);
 
-//        } else if (gamePanel.getGameState() == gamePanel.getPlayState()) {
+        } else if (gamePanel.getGameStage().toString().contains("InGame")) {
             checkPlayStateKeyPressed(code);
 
-//        } else if (gamePanel.getGameState() == gamePanel.getPauseState()) {
-//            checkPauseStateKeyPressed(code);
+        } else if (gamePanel.getGameStage() == GameStage.MultiplayerMenu) {
+            checkMultiplayerMenuKeyPressed(code);
+        } else if (gamePanel.getGameStage() == GameStage.MapSelector) {
+        	checkMapSelectorKeyPressed(code);
 //
 //        } else if (gamePanel.getGameState() == gamePanel.getDialogueState()) {
 //            checkDialogueStateKeyPressed(code);
@@ -43,61 +46,73 @@ public class KeyHandler implements KeyListener {
 //            checkGameOverStateKeyPressed(code);
 //        } else if (gamePanel.getGameState() == gamePanel.getTradeState()) {
 //            checkTradeStateKeyPressed(code);
-//        }
+        }
     }
 //
-//    private void checkTitleStateKeyPressed(int code) {
-//        if (gamePanel.getUi().getTitleScreenState() == 0) {
-//            checkMainTitleScreenKeyPressed(code);
-//
-//        } else if (gamePanel.getUi().getTitleScreenState() == 1) {
-//            checkCharacterSelectionScreenKeyPressed(code);
-//        }
-//    }
-//
-//    private void checkMainTitleScreenKeyPressed(int code) {
-//        if (code == KeyEvent.VK_W) {
-//            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
-//            gamePanel.playSoundEffect(9);
-//            if (gamePanel.getUi().getCommandNumber() < 0) {
-//                gamePanel.getUi().setCommandNumber(2);
-//            }
-//        }
-//
-//        if (code == KeyEvent.VK_S) {
-//            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
-//            gamePanel.playSoundEffect(9);
-//            if (gamePanel.getUi().getCommandNumber() > 2) {
-//                gamePanel.getUi().setCommandNumber(0);
-//            }
-//        }
-//
-//        if (code == KeyEvent.VK_ENTER) {
-//            enterPressed = true;
-//        }
-//    }
-//
-//    private void checkCharacterSelectionScreenKeyPressed(int code) {
-//        if (code == KeyEvent.VK_W) {
-//            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
-//            gamePanel.playSoundEffect(9);
-//            if (gamePanel.getUi().getCommandNumber() < 0) {
-//                gamePanel.getUi().setCommandNumber(3);
-//            }
-//        }
-//
-//        if (code == KeyEvent.VK_S) {
-//            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
-//            gamePanel.playSoundEffect(9);
-//            if (gamePanel.getUi().getCommandNumber() > 3) {
-//                gamePanel.getUi().setCommandNumber(0);
-//            }
-//        }
-//
-//        if (code == KeyEvent.VK_ENTER) {
-//            enterPressed = true;
-//        }
-//    }
+    private void checkMainMenuKeyPressed(int code) {
+    	if (code == KeyEvent.VK_W) {
+            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
+            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            if (gamePanel.getUi().getCommandNumber() < 0) {
+                gamePanel.getUi().setCommandNumber(2);
+            }
+        }
+
+        if (code == KeyEvent.VK_S) {
+            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
+            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            if (gamePanel.getUi().getCommandNumber() > 2) {
+                gamePanel.getUi().setCommandNumber(0);
+            }
+        }
+
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+    }
+
+    private void checkMultiplayerMenuKeyPressed(int code) {
+        if (code == KeyEvent.VK_W) {
+            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
+            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            if (gamePanel.getUi().getCommandNumber() < 0) {
+                gamePanel.getUi().setCommandNumber(2);
+            }
+        }
+
+        if (code == KeyEvent.VK_S) {
+            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
+            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            if (gamePanel.getUi().getCommandNumber() > 2) {
+                gamePanel.getUi().setCommandNumber(0);
+            }
+        }
+
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+    }
+    private void checkMapSelectorKeyPressed(int code) {
+        if (code == KeyEvent.VK_W) {
+            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
+            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            if (gamePanel.getUi().getCommandNumber() < 0) {
+                gamePanel.getUi().setCommandNumber(4);
+            }
+        }
+
+        if (code == KeyEvent.VK_S) {
+            gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
+            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            if (gamePanel.getUi().getCommandNumber() > 4) {
+                gamePanel.getUi().setCommandNumber(0);
+            }
+        }
+
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+    }
 //
 //    private void characterScreenEnterPressed() {
 //        if (gamePanel.getUi().getCommandNumber() == 0) {
@@ -170,8 +185,11 @@ public class KeyHandler implements KeyListener {
             spacePressed = true;
         }
 
-        if (code == KeyEvent.VK_F) {
-            projectileKeyPressed = true;
+        if (code == KeyEvent.VK_ESCAPE) {
+            escapePressed = true;
+        }
+        if (code == KeyEvent.VK_BACK_SLASH) {
+            this.debugPressed = true;
         }
     }
 //
@@ -421,8 +439,11 @@ public class KeyHandler implements KeyListener {
             spacePressed = false;
         }
 
-        if (code == KeyEvent.VK_F) {
-            projectileKeyPressed = false;
+        if (code == KeyEvent.VK_ESCAPE) {
+            escapePressed = false;
+        }
+        if (code == KeyEvent.VK_BACK_SLASH) {
+            this.debugPressed = false;
         }
     }
 
@@ -478,11 +499,11 @@ public class KeyHandler implements KeyListener {
     }
 
     public boolean isShowDebugText() {
-        return showDebugText;
+        return debugPressed;
     }
 
     public KeyHandler setShowDebugText(boolean showDebugText) {
-        this.showDebugText = showDebugText;
+        this.debugPressed = showDebugText;
         return this;
     }
 
@@ -495,12 +516,13 @@ public class KeyHandler implements KeyListener {
         return this;
     }
 
-    public boolean isProjectileKeyPressed() {
-        return projectileKeyPressed;
-    }
-
-    public KeyHandler setProjectileKeyPressed(boolean projectileKeyPressed) {
-        this.projectileKeyPressed = projectileKeyPressed;
+    public KeyHandler setEscapePressed(boolean escapePressed) {
+        this.escapePressed = escapePressed;
         return this;
     }
+
+	public boolean isEscapePressed() {
+		
+		return escapePressed;
+	}
 }

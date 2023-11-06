@@ -1,5 +1,6 @@
 package me.jamboxman5.abnpgame.managers;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 
 import me.jamboxman5.abnpgame.assets.entity.Entity;
+import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
@@ -20,6 +22,7 @@ public class MapManager {
 	private final GamePanel gp;
 	
 	public List<Entity> entities = new ArrayList<>();
+	public List<Map> maps = new ArrayList<>();
 	
 	Map m;
 	
@@ -30,8 +33,11 @@ public class MapManager {
 	}
 
 	private void getMaps() {
+		setup("Verdammtenstadt");
 		setup("Black_Isle");
-		
+		setup("Farmhouse");
+		setup("Karnivale");
+		setup("Airbase");
 	}
 
 	public void draw(Graphics2D g2) {
@@ -54,7 +60,9 @@ public class MapManager {
 		g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
                 RenderingHints.VALUE_STROKE_PURE);
 		
-		g2.drawImage(m.getImage(), screenX, screenY, null);
+		g2.setColor(Color.black);
+		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		g2.drawImage(m.getImage(), screenX, screenY,(int) (m.getImage().getWidth()*gp.getZoom()), (int)(m.getImage().getHeight()*gp.getZoom()), null);
 		
 	}
 	
@@ -68,9 +76,26 @@ public class MapManager {
 	
 	public void setup(String imageName) {
         try {
-            m = new Map(imageName);
+        	int x = 0;
+        	int y = 0;
+        	if (imageName.equals("Black_Isle")) {
+    			x = 1753;
+    			y = 1232;
+    		} else if (imageName.equals("Verdammtenstadt")) {
+    			x = 1426;
+    			y = 1374;
+    		} else if (imageName.equals("Farmhouse")) {
+    			x = 583;
+    			y = 483;
+    		} else if (imageName.equals("Airbase")) {
+    		
+    		} else if (imageName.equals("Karnivale")) {
+    			
+    		} 
+            m = new Map(imageName, x, y);
             m.setImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/resources/maps/" + imageName + ".png"))));
-            m.setImage(Utilities.scaleImage(m.getImage(), m.getImage().getWidth()*2, m.getImage().getHeight()*2));
+            m.setImage(Utilities.scaleImage(m.getImage(), (int)(m.getImage().getWidth()*1.2), (int)(m.getImage().getHeight()*1.2)));
+            maps.add(m);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,4 +106,48 @@ public class MapManager {
 	public void addEntity(Entity entity) { entities.add(entity); }
 
 	public List<Entity> getEntities() { return entities; }
+
+	public void removeConnectedPlayer(String username) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i) instanceof OnlinePlayer && 
+				((OnlinePlayer)entities.get(i)).getUsername().equals(username)) {
+				entities.remove(i);
+				break;
+			}
+		}
+	}
+	
+	private int getConnectedPlayerIndex(String username) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i) instanceof OnlinePlayer && 
+				((OnlinePlayer)entities.get(i)).getUsername().equals(username)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public void movePlayer(String username, double x, double y, double rotation, boolean invert) {
+		int index = getConnectedPlayerIndex(username);
+		if (index < 0) return;
+		entities.get(index).setWorldX(x*gp.getZoom());
+		entities.get(index).setWorldY(y*gp.getZoom());
+		entities.get(index).setRotation(rotation);
+		((OnlinePlayer)entities.get(index)).setInvert(invert);
+	}
+
+	public void setMap(int mapIndex) {
+		m = maps.get(mapIndex);
+	}
+
+	public void setMap(String map) {
+		for(Map m2 : maps) {
+			if (m2.toString().equals(map)) {
+				m = m2;
+				gp.getPlayer().setWorldX(m.getDefaultX());
+				gp.getPlayer().setWorldY(m.getDefaultY());
+				return;
+			}
+		}
+	}
 }

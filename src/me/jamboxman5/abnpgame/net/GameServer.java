@@ -9,20 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
+import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.net.packets.Packet;
 import me.jamboxman5.abnpgame.net.packets.Packet.PacketTypes;
 import me.jamboxman5.abnpgame.net.packets.Packet00Login;
+import me.jamboxman5.abnpgame.net.packets.Packet01Disconnect;
+import me.jamboxman5.abnpgame.net.packets.Packet02Move;
+import me.jamboxman5.abnpgame.net.packets.Packet03Map;
 
 public class GameServer extends Thread {
 
 	private DatagramSocket socket;
 	private GamePanel gp;
+	private boolean bound = true;
+	private Map activeMap;
 	
 	private List<OnlinePlayer> connectedPlayers = new ArrayList<>();
 	
 	public GameServer(GamePanel gamePanel) {
 		gp = gamePanel;
+		activeMap = gp.getMapManager().getActiveMap();
 		try {
 			socket = new DatagramSocket(13331);
 		} catch (SocketException e) {
@@ -31,14 +38,14 @@ public class GameServer extends Thread {
 	}
 	
 	public void run() {
-		while (true) {
+		while (bound) {
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} 
 			this.parsePacket(packet.getData(), packet.getAddress(), packet.getPort());
 //			String message = new String(packet.getData()).trim();
 //			System.out.println("CLIENT [" + packet.getAddress().getHostAddress() + ":" + packet.getPort() + "] > " + message);
@@ -63,10 +70,53 @@ public class GameServer extends Thread {
 			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet00Login)packet).getUsername() + " has connected.");
 			OnlinePlayer player = new OnlinePlayer(gp, ((Packet00Login)packet).getUsername(), address, port);
 			this.addConnection(player, (Packet00Login)packet);
+			new Packet03Map(activeMap.toString()).writeData(this);;
 			break;
 		case DISCONNECT:
+			packet = new Packet01Disconnect(data);
+			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet01Disconnect)packet).getUsername() + " has disconnected.");
+			this.removeConnection((Packet01Disconnect)packet);
 			break;
+		case MOVE:
+			packet = new Packet02Move(data);
+			//System.out.println(((Packet02Move) packet).getUsername() + " new position: X:" + ((Packet02Move) packet).getX() + " Y:" + ((Packet02Move) packet).getY() + " Rotation:" + ((Packet02Move) packet).getRotation());
+			this.handleMove(((Packet02Move) packet));
 		}
+	}
+
+	private void handleMove(Packet02Move packet) {
+		if (getConnectedPlayer(packet.getUsername()) != null) {
+			int index = getConnectedPlayerIndex(packet.getUsername());
+			this.connectedPlayers.get(index).setWorldX(packet.getX());
+			this.connectedPlayers.get(index).setWorldY(packet.getY());
+			this.connectedPlayers.get(index).setRotation(packet.getRotation());
+			this.connectedPlayers.get(index).setInvert(packet.invertAngle());
+			
+			packet.writeData(this);
+		}
+	}
+
+	public void removeConnection(Packet01Disconnect packet) {
+		connectedPlayers.remove(getConnectedPlayerIndex(packet.getUsername()));
+		packet.writeData(this);
+	}
+	
+	public OnlinePlayer getConnectedPlayer(String username) {
+		for (OnlinePlayer p : connectedPlayers) {
+			if (p.getUsername().equals(username)) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	public int getConnectedPlayerIndex(String username) {
+		for (int i = 0; i < connectedPlayers.size(); i++) {
+			if (connectedPlayers.get(i).getUsername().equals(username)) {
+				return i;
+			}
+		}
+		return 0;
 	}
 
 	public void addConnection(OnlinePlayer player, Packet00Login packet) {

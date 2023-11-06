@@ -20,7 +20,7 @@ public class Launcher {
 		window.setResizable(false);
 		window.setTitle("Game");
 				
-		GamePanel gamePanel = new GamePanel();
+		GamePanel gamePanel = new GamePanel(window);
 		
 		window.add(gamePanel);
 		

@@ -19,6 +19,7 @@ public abstract class Entity {
 	protected double worldX, worldY;
 	protected String name;
 	protected double speed;
+	protected double rotation;
 	
 	protected String direction;
 	private int spriteCounter = 0;
@@ -70,8 +71,10 @@ public abstract class Entity {
 	
 	
 	public void setSprite(BufferedImage img) { sprite = img; }
-	public BufferedImage getSprite() { return sprite; }
-	public double getSpeed() { return speed; }
+	public BufferedImage getSprite() { 
+		return Utilities.scaleImage(sprite, (int)(sprite.getWidth()*(gp.getZoom())), (int)(sprite.getHeight()*(gp.getZoom()))) ;
+	}
+	public double getSpeed() { return speed*gp.getZoom(); }
 	public double getWorldX() { return worldX; }
 	public double getWorldY() { return worldY; }
 	public String getDirection() { return direction; }
@@ -82,6 +85,10 @@ public abstract class Entity {
 	}
 	public int getScreenX() {
 		return (int) (worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY());
+	}
+
+	public void setRotation(double rotation) {
+		this.rotation = rotation;
 	}
 
 }

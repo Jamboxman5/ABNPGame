@@ -64,7 +64,7 @@ public class MouseMotionHandler implements MouseMotionListener {
 			if (gp.getGameStage() == GameStage.InGameMultiplayer ||
 				gp.getGameStage() == GameStage.InGameSinglePlayer) {
 				g2.drawImage(Utilities.scaleImage(cursor, 80, 80), (int) gp.getMousePointer().getX()-40, (int) gp.getMousePosition().getY()-40, null);	
-			} else if (gp.getGameStage() == GameStage.MainMenu) {
+			} else if (gp.getGameStage().toString().contains("Menu")) {
 				if (cursorShadow != null) {
 					Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
 					Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
