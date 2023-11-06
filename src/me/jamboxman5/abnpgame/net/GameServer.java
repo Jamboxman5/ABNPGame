@@ -68,7 +68,7 @@ public class GameServer extends Thread {
 		case LOGIN:
 			packet = new Packet00Login(data);
 			System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet00Login)packet).getUsername() + " has connected.");
-			OnlinePlayer player = new OnlinePlayer(gp, ((Packet00Login)packet).getUsername(), address, port);
+			OnlinePlayer player = new OnlinePlayer(gp, ((Packet00Login)packet).getUsername(), ((Packet00Login)packet).getX(), ((Packet00Login)packet).getY(), address, port);
 			this.addConnection(player, (Packet00Login)packet);
 			new Packet03Map(activeMap.toString()).writeData(this);;
 			break;
@@ -133,7 +133,7 @@ public class GameServer extends Thread {
 				alreadyConnected = true;
 			} else {
 				sendData(packet.getData(), p.ipAddress, p.port);
-				packet = new Packet00Login(p.getUsername());
+				packet = new Packet00Login(p.getUsername(), p.getWorldX(), p.getWorldY());
 				sendData(packet.getData(), player.ipAddress, player.port);
 			}
 		}

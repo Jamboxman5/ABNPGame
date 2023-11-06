@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.assets.entity.player.Player;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
@@ -269,7 +268,7 @@ public class GamePanel extends JPanel implements Runnable {
 		getSocketClient().start();
 		
 		player = new OnlinePlayer(this, keyHandler, name, null, -1);
-		Packet00Login loginPacket = new Packet00Login(name);
+		Packet00Login loginPacket = new Packet00Login(name, player.getWorldX(), player.getWorldY());
 
 		if (socketServer != null) {
 			socketServer.addConnection((OnlinePlayer) player, loginPacket);

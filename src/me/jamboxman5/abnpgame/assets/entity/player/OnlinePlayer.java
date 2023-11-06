@@ -23,10 +23,12 @@ public class OnlinePlayer extends Player {
 		this.port = port;
 	}
 	
-	public OnlinePlayer(GamePanel gamePanel, String name, InetAddress ipAddress, int port) {
+	public OnlinePlayer(GamePanel gamePanel, String name, int x, int y, InetAddress ipAddress, int port) {
 		super(gamePanel, null, name);
 		this.ipAddress = ipAddress;
 		this.port = port;
+		setWorldX(x);
+		setWorldY(y);
 	}
 	
 	@Override
