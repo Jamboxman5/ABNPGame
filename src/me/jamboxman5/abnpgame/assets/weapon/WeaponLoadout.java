@@ -1,7 +1,9 @@
 package me.jamboxman5.abnpgame.assets.weapon;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import me.jamboxman5.abnpgame.assets.weapon.firearms.Firearm;
 import me.jamboxman5.abnpgame.assets.weapon.firearms.pistol.Pistol1911;
 import me.jamboxman5.abnpgame.assets.weapon.firearms.rifle.RifleM4A1;
 import me.jamboxman5.abnpgame.assets.weapon.firearms.shotgun.ShotgunWinchester12;
@@ -12,6 +14,7 @@ public class WeaponLoadout {
 	Weapon activeWeapon;
 	
 	public WeaponLoadout() {
+		weapons = new ArrayList<>();
 		weapons.add(new RifleM4A1());
 		weapons.add(new Pistol1911());
 		weapons.add(new ShotgunWinchester12());
@@ -44,5 +47,10 @@ public class WeaponLoadout {
 		}
 		weapons.remove(toRemove);
 	}
-	
+	public Weapon getActiveWeapon() { return activeWeapon; }
+	public Firearm getActiveFirearm() {
+		if (activeWeapon instanceof Firearm f) {
+			return f;
+		} else return null;
+	}
 }

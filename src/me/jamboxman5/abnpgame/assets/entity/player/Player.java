@@ -7,9 +7,11 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 import me.jamboxman5.abnpgame.assets.entity.Mob;
 import me.jamboxman5.abnpgame.assets.weapon.Weapon;
+import me.jamboxman5.abnpgame.assets.weapon.WeaponLoadout;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
@@ -21,6 +23,8 @@ public class Player extends Mob {
 	protected final KeyHandler keyH;
 	protected Weapon activeWeapon;
 	private String gamerTag;
+	
+	protected WeaponLoadout weapons;
 		
 	public Player(GamePanel gamePanel, KeyHandler keyHandler, String name) {
 		super(gamePanel, 
@@ -29,6 +33,8 @@ public class Player extends Mob {
 			  gamePanel.getMapManager().getActiveMap().getDefaultY(), 
 			  defaultSpeed);
 
+		weapons = new WeaponLoadout();
+		
 		keyH = keyHandler;
 		gamerTag = name;
 		
@@ -36,12 +42,6 @@ public class Player extends Mob {
 		screenY = gamePanel.getScreenHeight()/2 - 50;
 		
 		setDefaults();
-		setImages();
-	}
-
-	private void setImages() {
-		setSprite(setup("/resources/entity/player/Player_Rifle", .33));
-		
 	}
 
 	private void setDefaults() {		
@@ -224,7 +224,12 @@ public class Player extends Mob {
 		    
 		    g2.transform(tx);
 
-		    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(19*gp.getZoom())), null);
+		    BufferedImage sprite = weapons.getActiveWeapon().getPlayerSprite();
+		    if (weapons.getActiveFirearm().getName() == "M1911") {
+			    g2.drawImage(sprite, (int)(-sprite.getWidth()+(37*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
+		    } else {
+			    g2.drawImage(sprite, (int)(-sprite.getWidth()+(60*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
+		    }
 		    g2.setTransform(oldTrans);
 
 	}
@@ -261,6 +266,7 @@ public class Player extends Mob {
 
 	private void resetEnterPressedValue() { keyH.setEnterPressed(false); }
 
+	public WeaponLoadout getWeaponLoadout() { return weapons; }
 	public int getScreenX() { return screenX; }
 	public int getScreenY() { return screenY; }
 	public void setRotation(double i) { rotation = i; }

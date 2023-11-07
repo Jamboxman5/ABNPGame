@@ -19,6 +19,7 @@ import me.jamboxman5.abnpgame.managers.KeyHandler;
 import me.jamboxman5.abnpgame.managers.MapManager;
 import me.jamboxman5.abnpgame.managers.MouseHandler;
 import me.jamboxman5.abnpgame.managers.MouseMotionHandler;
+import me.jamboxman5.abnpgame.managers.MouseWheelHandler;
 import me.jamboxman5.abnpgame.managers.UIManager;
 import me.jamboxman5.abnpgame.managers.WindowHandler;
 import me.jamboxman5.abnpgame.net.GameClient;
@@ -48,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private final KeyHandler keyHandler = new KeyHandler(this);
 	private final MapManager mapManager = new MapManager(this);
 	private final MouseMotionHandler mouseMotionHandler = new MouseMotionHandler(this);
+	private final MouseWheelHandler mouseWheelHandler = new MouseWheelHandler(this);
 	private final MouseHandler mouseActionHandler = new MouseHandler(this);
 	private final UIManager ui = new UIManager(this, keyHandler);
 	private final WindowHandler windowHandler = new WindowHandler(this);
@@ -71,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
 		setDoubleBuffered(true);
 		addKeyListener(keyHandler); 
 		addMouseMotionListener(mouseMotionHandler);
+		addMouseWheelListener(mouseWheelHandler);
 		addMouseListener(mouseActionHandler);
 		setFocusable(true);
 		window.addWindowListener(windowHandler);				
@@ -130,7 +133,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 	
 	public void delta() {
-		
+		mouseActionHandler.update();
 		if (stage == GameStage.MainMenu ||
 			stage == GameStage.MultiplayerMenu ||
 			stage == GameStage.MapSelector) {
@@ -170,20 +173,20 @@ public class GamePanel extends JPanel implements Runnable {
         long durationInMs = TimeUnit.NANOSECONDS.toMillis(passedTime);
 
         
-        String debugTXT = "World X: " + String.format("%,.2f", getPlayer().getWorldX());
-        int y = 50;
+        String debugTXT = "World X: " + String.format("%,.2f", getPlayer().getWorldX()*getZoom());
+        int y = 180;
         int spacer = 30;
         int x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);
         g2.drawString(debugTXT, x, y);
         //
-        debugTXT = "World Y: " + String.format("%,.2f", getPlayer().getWorldY());
+        debugTXT = "World Y: " + String.format("%,.2f", getPlayer().getWorldY()*getZoom());
         y+=spacer;
         x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);
         g2.drawString(debugTXT, x, y);
         //
-        debugTXT = "Player Rotation: " + Math.toDegrees(player.getAngleToCursor());
+        debugTXT = "Player Rotation: " + String.format("%,.2f", Math.toDegrees(player.getAngleToCursor()));
         y+=spacer;
         x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);
@@ -365,4 +368,5 @@ public class GamePanel extends JPanel implements Runnable {
 		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()+.00508)));
 		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()+.00508)));
 	}
+	public static GamePanel getInstance() { return instance; }
 }

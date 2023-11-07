@@ -4,45 +4,47 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.main.GameStage;
 
 public class MouseHandler implements MouseListener {
 
 	private final GamePanel gp;
 	
+	boolean leftMouseHeld = false;
+	
 	public MouseHandler(GamePanel gamePanel) {
 		gp = gamePanel;
 	}
 	
+	public void update() {
+		if (gp.getGameStage().toString().contains("InGame")) {
+			handleInGameClick();
+		}
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-//		System.out.println("playerx: " + gp.getPlayer().getAdjustedScreenX());
-//		System.out.println("playery: " + gp.getPlayer().getAdjustedScreenY());
-//		System.out.println("mousex: " + gp.getMousePointer().getX());
-//		System.out.println("mousey: " + gp.getMousePointer().getY());
 		
-		switch(gp.getGameStage()) {
-		case InGameSinglePlayer:
-			break;
-		case InGameMultiplayer:
+	}
 
-
-			break;
-		default:
-			break;
+	private void handleInGameClick() {
+		if (leftMouseHeld) {
+			gp.getPlayer().getWeaponLoadout().getActiveWeapon().attack();
 		}
-		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getButton() == 1) {
+			leftMouseHeld = true;
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getButton() == 1) {
+			leftMouseHeld = false;
+		}		
 	}
 
 	@Override
@@ -56,6 +58,7 @@ public class MouseHandler implements MouseListener {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 	
 	

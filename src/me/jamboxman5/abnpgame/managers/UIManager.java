@@ -1,6 +1,9 @@
 package me.jamboxman5.abnpgame.managers;
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
@@ -14,6 +17,7 @@ import javax.imageio.ImageIO;
 import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.assets.maps.Map;
+import me.jamboxman5.abnpgame.assets.weapon.firearms.Firearm;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.util.Utilities;
@@ -141,6 +145,53 @@ public class UIManager {
 	}
 	
 	private void drawGameUI(Graphics2D g2) {
+		
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY);
+		g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
+                RenderingHints.VALUE_STROKE_PURE);
+		
+		drawGamerTags(g2);
+		drawWeaponHud(g2);
+	}
+	
+	private void drawWeaponHud(Graphics2D g2) {
+		
+		int width = 300;
+		int height = 120;
+		int x = gp.getWidth() - 20 - width;
+		int y = 20;
+		
+		Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
+        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        g2.setColor(new Color(100,0,0));
+        g2.setStroke(new BasicStroke(4));
+        g2.setComposite(comp);
+        g2.fillRoundRect(x, y, width, height,8,8);
+        g2.setComposite(old);
+        g2.setColor(Color.white);
+        g2.drawRoundRect(x, y, width, height, 8,8);
+        
+        BufferedImage weaponIMG = gp.getPlayer().getWeaponLoadout().getActiveWeapon().getHudSprite();
+        x += (width/2)-(weaponIMG.getWidth()/2);
+        y += (height/2) - (weaponIMG.getHeight()/2) - 10;
+        
+        g2.drawImage(weaponIMG, x, y, null);
+        
+        Firearm gun = gp.getPlayer().getWeaponLoadout().getActiveFirearm();
+        if (gun == null) return;
+        
+        String ammo = gun.getLoadedAmmo() + " / " + gun.getAmmoCount();
+        x = Utilities.getXForRightAlignedText(gp.getWidth() - 30, ammo, g2);
+        y = height + 5;
+        g2.drawString(ammo, x, y);
+        x = gp.getWidth() - 10 - width;
+        g2.drawString(gun.getName(), x, y);
+	}
+	
+	private void drawGamerTags(Graphics2D g2) {
 		for (Entity e : gp.getMapManager().getEntities()) {
 			if (e instanceof OnlinePlayer) {
 				g2.setColor(Color.white);
@@ -159,7 +210,6 @@ public class UIManager {
         String name = gp.getPlayer().getName(); 
         int length = (int) g2.getFontMetrics().getStringBounds(name, g2).getWidth();
         g2.drawString(name, x - (length/2), y - 40);
-		
 	}
 	
 	private void drawMainMenu(Graphics2D g2) {
