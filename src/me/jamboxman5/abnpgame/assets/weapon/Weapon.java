@@ -1,8 +1,9 @@
 package me.jamboxman5.abnpgame.assets.weapon;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
-import me.jamboxman5.abnpgame.main.GamePanel;
+import me.jamboxman5.abnpgame.assets.weapon.mods.WeaponMod;
 
 public class Weapon {
 
@@ -13,11 +14,7 @@ public class Weapon {
 	
 	protected BufferedImage playerSprite;
 	protected BufferedImage dropSprite;
-	
-	protected GamePanel gp;
-	
-	public Weapon(GamePanel gamePanel) {
-		gp = gamePanel;
-	}
+
+	protected List<WeaponMod> equippedMods;
 	
 }

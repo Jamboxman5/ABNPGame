@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
 import me.jamboxman5.abnpgame.assets.entity.Mob;
+import me.jamboxman5.abnpgame.assets.weapon.Weapon;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
@@ -18,6 +19,7 @@ public class Player extends Mob {
 	private final static int defaultSpeed = 5;
 	
 	protected final KeyHandler keyH;
+	protected Weapon activeWeapon;
 	private String gamerTag;
 		
 	public Player(GamePanel gamePanel, KeyHandler keyHandler, String name) {

@@ -1,5 +1,9 @@
 package me.jamboxman5.abnpgame.assets.weapon.firearms.rifle;
 
-public class RifleM4A1 {
+import me.jamboxman5.abnpgame.assets.weapon.firearms.Firearm;
+
+public class RifleM4A1 extends Firearm {
+
+	
 
 }

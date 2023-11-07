@@ -61,9 +61,10 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private GameClient socketClient;
 	private GameServer socketServer;
+	private static GamePanel instance;
 	
 	public GamePanel(JFrame frame) {
-		
+		instance = this;
 		window = frame;
 		setPreferredSize(new Dimension(screenWidth, screenHeight));
 		setBackground(Color.black);
