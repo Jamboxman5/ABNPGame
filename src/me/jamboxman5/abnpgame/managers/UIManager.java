@@ -67,7 +67,7 @@ public class UIManager {
 		if (gp.getGameStage().toString().contains("InGame")) {
 			if (keyH.isEscapePressed()) {
 				keyH.setEscapePressed(false);
-	            gp.playSoundEffect("sfx/Menu_Select");
+	            gp.playSoundEffect("sfx/menu/Menu_Select");
 	            gp.backToMainMenu();
 			}
 			if (keyH.isShowDebugText()) {
@@ -82,14 +82,14 @@ public class UIManager {
 				switch(menuIndex) {
 				case 0:
 					gp.moveToMapSelect(GameStage.InGameSinglePlayer);
-		            gp.playSoundEffect("sfx/Menu_Select");
+		            gp.playSoundEffect("sfx/menu/Menu_Select");
 					break;
 				case 1:
 					gp.moveToMultiplayerMenu();
-		            gp.playSoundEffect("sfx/Menu_Select");
+		            gp.playSoundEffect("sfx/menu/Menu_Select");
 					break;
 				case 2:
-		            gp.playSoundEffect("sfx/Menu_Select");
+		            gp.playSoundEffect("sfx/menu/Menu_Select");
 		            gp.quitGame();
 					break;
 				}
@@ -104,15 +104,15 @@ public class UIManager {
 				switch(menuIndex) {
 				case 0:
 					gp.moveToMapSelect(GameStage.InGameMultiplayer);
-		            gp.playSoundEffect("sfx/Menu_Select");
+		            gp.playSoundEffect("sfx/menu/Menu_Select");
 					break;
 				case 1:
 					gp.moveToMultiplayerGame(false);
-		            gp.playSoundEffect("sfx/Menu_Select");
+		            gp.playSoundEffect("sfx/menu/Menu_Select");
 					break;
 				case 2:
 					gp.backToMainMenu();
-		            gp.playSoundEffect("sfx/Menu_Select");
+		            gp.playSoundEffect("sfx/menu/Menu_Select");
 					break;
 				}
 				menuIndex = 0;
@@ -121,7 +121,7 @@ public class UIManager {
 		} else if (gp.getGameStage() == GameStage.MapSelector) {
 			if (keyH.isEnterPressed()) {
 				keyH.setEnterPressed(false);
-				gp.playSoundEffect("sfx/Menu_Select");
+				gp.playSoundEffect("sfx/menu/Menu_Select");
 				gp.getMapManager().setMap(menuIndex);
 				switch(gp.getNextStage()) {
 				case InGameMultiplayer:

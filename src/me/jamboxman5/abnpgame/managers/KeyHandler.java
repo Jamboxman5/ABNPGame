@@ -52,7 +52,7 @@ public class KeyHandler implements KeyListener {
     private void checkMainMenuKeyPressed(int code) {
     	if (code == KeyEvent.VK_W) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
-            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() < 0) {
                 gamePanel.getUi().setCommandNumber(2);
             }
@@ -60,7 +60,7 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_S) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
-            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() > 2) {
                 gamePanel.getUi().setCommandNumber(0);
             }
@@ -74,7 +74,7 @@ public class KeyHandler implements KeyListener {
     private void checkMultiplayerMenuKeyPressed(int code) {
         if (code == KeyEvent.VK_W) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
-            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() < 0) {
                 gamePanel.getUi().setCommandNumber(2);
             }
@@ -82,7 +82,7 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_S) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
-            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() > 2) {
                 gamePanel.getUi().setCommandNumber(0);
             }
@@ -95,7 +95,7 @@ public class KeyHandler implements KeyListener {
     private void checkMapSelectorKeyPressed(int code) {
         if (code == KeyEvent.VK_W) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
-            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() < 0) {
                 gamePanel.getUi().setCommandNumber(4);
             }
@@ -103,7 +103,7 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_S) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
-            gamePanel.playSoundEffect("sfx/Menu_Scroll");
+            gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() > 4) {
                 gamePanel.getUi().setCommandNumber(0);
             }

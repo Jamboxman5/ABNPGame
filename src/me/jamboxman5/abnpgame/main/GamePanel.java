@@ -349,19 +349,19 @@ public class GamePanel extends JPanel implements Runnable {
 	public void zoomIn() {
 		setZoom(getZoom()+.002f);
 		for (Entity e : mapManager.getEntities()) {
-			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()-.00205)));
-			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()-.00205)));
+			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()-.00208)));
+			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()-.00208)));
 		}
-		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()-.00205)));
-		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()-.00205)));
+		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()-.00208)));
+		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()-.00208)));
 	}
 	public void zoomOut() {
 		setZoom(getZoom()-.005f);
 		for (Entity e : mapManager.getEntities()) {
-			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()+.00505)));
-			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()+.00505)));
+			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()+.00508)));
+			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()+.00508)));
 		}
-		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()+.00505)));
-		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()+.00505)));
+		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()+.00508)));
+		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()+.00508)));
 	}
 }
