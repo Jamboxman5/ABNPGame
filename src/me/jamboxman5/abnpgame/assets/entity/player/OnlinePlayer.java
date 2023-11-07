@@ -78,7 +78,7 @@ public class OnlinePlayer extends Player {
 		}        
 	    g2.transform(tx);
 
-	    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(19*gp.getZoom())), null);
+	    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(20*gp.getZoom())), null);
 	    g2.setTransform(oldTrans);
 	}
 	public void setInvert(boolean invert) {

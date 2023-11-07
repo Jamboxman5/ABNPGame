@@ -22,5 +22,7 @@ public class Map {
 
 	public int getDefaultX() { return defaultX; }
 	public int getDefaultY() { return defaultY; }
+
+	public String getName() { return name; }
 	
 }

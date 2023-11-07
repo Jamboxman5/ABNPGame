@@ -32,7 +32,7 @@ public class MapManager {
 		getMaps();
 	}
 
-	private void getMaps() {
+	void getMaps() {
 		setup("Verdammtenstadt");
 		setup("Black_Isle");
 		setup("Farmhouse");
@@ -152,4 +152,6 @@ public class MapManager {
 			}
 		}
 	}
+	
+	public List<Map> getMapList() { return maps; }
 }

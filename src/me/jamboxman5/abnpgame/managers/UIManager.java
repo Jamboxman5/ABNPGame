@@ -1,14 +1,19 @@
 package me.jamboxman5.abnpgame.managers;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
+import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.util.Utilities;
@@ -19,10 +24,26 @@ public class UIManager {
 	private final KeyHandler keyH;
 	private int menuIndex = 0;
 	boolean debugMode = false;
+	Font titleFont;
+	Font subTitleFont;
+	Font selectionFont;
+	
+	BufferedImage menuBKG;
 	
 	public UIManager(GamePanel gamePanel, KeyHandler keyHandler) {
 		gp = gamePanel;
 		keyH = keyHandler;
+		
+		try {
+			menuBKG = ImageIO.read(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/resources/menu/Menu_Background.png"));
+			InputStream is = getClass().getResourceAsStream("/me/jamboxman5/abnpgame/resources/fonts/SASFONT.ttf");
+			titleFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.BOLD, 260);
+			subTitleFont = titleFont.deriveFont(Font.PLAIN, 100);
+			selectionFont = titleFont.deriveFont(Font.PLAIN, 60);
+		} catch (IOException | FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -143,24 +164,36 @@ public class UIManager {
 	
 	private void drawMainMenu(Graphics2D g2) {
 		g2.setColor(new Color(50,0,0));
-		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		g2.drawImage(menuBKG, 0, 0, gp.getScreenWidth(), gp.getScreenHeight(), null);
+		
 		
 		setupDefaultGraphics(g2);
 		
-		String title = "ABNP GAME";
-        g2.setFont(new Font("Courier New", Font.BOLD, 180));
+		String title = "ABNP:";
+		String subTitle = "Zombie Assault";
+        g2.setFont(titleFont);
 
-        Utilities.drawStringShadow(g2, title, 60, 180);
+        int x = 60;
+        int y = 220;
+        
+        Utilities.drawStringShadow(g2, title, x, y);
 
         g2.setColor(Color.white);
-        g2.drawString(title, 60, 180);
+        g2.drawString(title, x, y);
        
+        y += 90;
+        g2.setFont(subTitleFont);
         
         
-        g2.setFont(new Font("Courier New", Font.PLAIN, 60));
+        Utilities.drawStringShadow(g2, subTitle, x, y);
+
+        g2.setColor(Color.white);
+        g2.drawString(subTitle, x, y);
         
-        int x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,"Singleplayer", g2);
-        int y = gp.getScreenCenterY() + 180;
+        g2.setFont(selectionFont);
+        
+        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,"Singleplayer", g2);
+        y = gp.getScreenCenterY() + 180;
         int spacer = 70;
         
         Utilities.drawStringShadow(g2, "Singleplayer", x, y);
@@ -170,10 +203,10 @@ public class UIManager {
         
         if (menuIndex == 0) {
             
-    		Utilities.drawStringShadow(g2, ">", x-80, y);
+    		Utilities.drawStringShadow(g2, ">", x-60, y);
 
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);        
+            g2.drawString(">", x-60, y);        
         }
         y+=spacer;
         
@@ -184,10 +217,10 @@ public class UIManager {
         g2.setColor(Color.white);
         g2.drawString("Multiplayer", x, y);        
         if (menuIndex == 1) {
-    		Utilities.drawStringShadow(g2, ">", x-80, y);
+    		Utilities.drawStringShadow(g2, ">", x-60, y);
 
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         }
+            g2.drawString(">", x-60, y);         }
         
         y+= spacer;
         x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Quit Game", g2);
@@ -196,250 +229,110 @@ public class UIManager {
         g2.setColor(Color.white);
         g2.drawString("Quit Game", x, y);     
         if (menuIndex == 2) {
-    		Utilities.drawStringShadow(g2, ">", x-80, y);
+    		Utilities.drawStringShadow(g2, ">", x-60, y);
 
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         }
+            g2.drawString(">", x-60, y);         }
     
 	}
 
 	private void drawMultiplayerMenu(Graphics2D g2) {
 		g2.setColor(new Color(50,0,0));
-		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		g2.drawImage(menuBKG, 0, 0, gp.getScreenWidth(), gp.getScreenHeight(), null);
 		
 		setupDefaultGraphics(g2);
 		
-		String title = "Multiplayer";
-        g2.setFont(new Font("Courier New", Font.BOLD, 160));
+		int x = 60;
+        int y = 220;
+		String title = "MULTIPLAYER";
+        g2.setFont(titleFont.deriveFont(Font.PLAIN, 180));
 
-        Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
-        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-		g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString(title, 60+Utilities.getTextHeight(title, g2)/12, 180+Utilities.getTextHeight(title, g2)/12);
-		
-		g2.setComposite(old);
+        Utilities.drawStringShadow(g2, title, x, y);
 
         g2.setColor(Color.white);
         g2.drawString(title, 60, 180);
        
         
         
-        g2.setFont(new Font("Courier New", Font.PLAIN, 60));
+        g2.setFont(selectionFont);
         
-        int x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,"Host Game", g2);
-        int y = gp.getScreenCenterY() + 180;
+        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,"Host Game", g2);
+        y = gp.getScreenCenterY() + 180;
         int spacer = 70;
-        g2.setComposite(comp);
         
-		g2.setColor(Color.black);
-        g2.drawString("Host Game", x+3, y+3);
+		Utilities.drawStringShadow(g2, "Host Game", x, y);
 		
-		g2.setComposite(old);
 
         g2.setColor(Color.white);
         g2.drawString("Host Game", x, y);
         
         if (menuIndex == 0) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
+    		Utilities.drawStringShadow(g2, ">", x-60, y);
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);        
+            g2.drawString(">", x-60, y);        
         }
         y+=spacer;
         
         x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Join Game", g2);
-        g2.setComposite(comp);
         
-		g2.setColor(Color.black);
-        g2.drawString("Join Game", x+3, y+3);
-		
-		g2.setComposite(old);
-
-        g2.setColor(Color.white);
+		Utilities.drawStringShadow(g2, "Join Game", x, y);
+		g2.setColor(Color.white);
         g2.drawString("Join Game", x, y);        
         if (menuIndex == 1) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
+        	Utilities.drawStringShadow(g2, ">", x-60, y);
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         }
+            g2.drawString(">", x-60, y);      
+        }
         
         y+= spacer;
         x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Main Menu", g2);
-        g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString("Main Menu", x+3, y+3);
-		
-		g2.setComposite(old);
-
-        g2.setColor(Color.white);
+        Utilities.drawStringShadow(g2, "Main Menu", x, y);
+		g2.setColor(Color.white);
         g2.drawString("Main Menu", x, y);     
         if (menuIndex == 2) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
+        	Utilities.drawStringShadow(g2, ">", x-60, y);
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         }
+            g2.drawString(">", x-60, y);            
+        }
     
 	}
 	
 	private void drawMapSelector(Graphics2D g2) {
 		g2.setColor(new Color(50,0,0));
-		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		g2.drawImage(menuBKG, 0, 0, gp.getScreenWidth(), gp.getScreenHeight(), null);
 		
-		setupDefaultGraphics(g2);
-		
+		g2.setFont(titleFont.deriveFont(Font.BOLD, 180));
 		String title = "Select Map:";
-        g2.setFont(new Font("Courier New", Font.BOLD, 160));
 
-        Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .6f);
-        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-		g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString(title, 60+Utilities.getTextHeight(title, g2)/12, 180+Utilities.getTextHeight(title, g2)/12);
+		int x = 60+Utilities.getTextHeight(title, g2)/12;
+		int y = 180+Utilities.getTextHeight(title, g2)/12;
 		
-		g2.setComposite(old);
-
+        Utilities.drawStringShadow(g2, title, x, y);
         g2.setColor(Color.white);
         g2.drawString(title, 60, 180);
        
         
         
-        g2.setFont(new Font("Courier New", Font.PLAIN, 60));
+        g2.setFont(selectionFont);
         
-        int x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,"Airbase", g2);
-        int y = gp.getScreenHeight();
+        
         int spacer = 70;
-        y -= spacer;
-        g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString("Airbase", x+3, y+3);
-		
-		g2.setComposite(old);
+        y = gp.getScreenHeight();
 
-        g2.setColor(Color.white);
-        g2.drawString("Airbase", x, y);
         
-        if (menuIndex == 4) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
+        
+        for (int i = gp.getMapManager().getMapList().size()-1; i >= 0; i--) {
+        	Map m = gp.getMapManager().getMapList().get(i);
+        	x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40,m.getName().replace("_", " "), g2);
+            y -= spacer;
+        	Utilities.drawStringShadow(g2, m.getName().replace("_", " "), x, y);
             g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);        
-        }
-        y-=spacer;
-        
-        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Karnivale", g2);
-        g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString("Karnivale", x+3, y+3);
-		
-		g2.setComposite(old);
-
-        g2.setColor(Color.white);
-        g2.drawString("Karnivale", x, y);        
-        if (menuIndex == 3) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
-            g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         
+            g2.drawString(m.getName().replace("_", " "), x, y);
+            if (menuIndex == i) {
+            	Utilities.drawStringShadow(g2, ">", x - 60, y);
+                g2.setColor(Color.white);
+                g2.drawString(">", x - 60, y);
             }
-        
-        y -= spacer;
-        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Farmhouse", g2);
-        g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString("Farmhouse", x+3, y+3);
-		
-		g2.setComposite(old);
-
-        g2.setColor(Color.white);
-        g2.drawString("Farmhouse", x, y);     
-        if (menuIndex == 2) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
-            g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         
-        }
-        
-        y -= spacer;
-        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Black Isle", g2);
-        g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString("Black Isle", x+3, y+3);
-		
-		g2.setComposite(old);
-
-        g2.setColor(Color.white);
-        g2.drawString("Black Isle", x, y);     
-        if (menuIndex == 1) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
-            g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         
-        }
-        
-        y -= spacer;
-        x = Utilities.getXForRightAlignedText(gp.getScreenWidth() - 40, "Verdammtenstadt", g2);
-        g2.setComposite(comp);
-        
-		g2.setColor(Color.black);
-        g2.drawString("Verdammtenstadt", x+3, y+3);
-		
-		g2.setComposite(old);
-
-        g2.setColor(Color.white);
-        g2.drawString("Verdammtenstadt", x, y);     
-        if (menuIndex == 0) {
-        	g2.setComposite(comp);
-            
-    		g2.setColor(Color.black);
-            g2.drawString(">", x-80+3, y+3);
-    		
-    		g2.setComposite(old);
-
-            g2.setColor(Color.white);
-            g2.drawString(">", x-80, y);         
         }
     
 	}
