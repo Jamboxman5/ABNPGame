@@ -86,12 +86,6 @@ public class GameServer extends Thread {
 
 	private void handleMove(Packet02Move packet) {
 		if (getConnectedPlayer(packet.getUsername()) != null) {
-			int index = getConnectedPlayerIndex(packet.getUsername());
-			this.connectedPlayers.get(index).setWorldX(packet.getX());
-			this.connectedPlayers.get(index).setWorldY(packet.getY());
-			this.connectedPlayers.get(index).setRotation(packet.getRotation());
-			this.connectedPlayers.get(index).setInvert(packet.invertAngle());
-			
 			packet.writeData(this);
 		}
 	}

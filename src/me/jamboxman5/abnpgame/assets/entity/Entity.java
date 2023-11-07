@@ -3,7 +3,7 @@ package me.jamboxman5.abnpgame.assets.entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -22,8 +22,8 @@ public abstract class Entity {
 	protected double rotation;
 	
 	protected String direction;
-	private int spriteCounter = 0;
-	private int spriteNumber = 1;
+//	private int spriteCounter = 0;
+//	private int spriteNumber = 1;
 	
 	public Entity(GamePanel gamePanel) {
 		gp = gamePanel;
@@ -38,17 +38,19 @@ public abstract class Entity {
 	public abstract void update();
 	public abstract void draw(Graphics2D g2);
 	
-	public BufferedImage setup(String imagePath, int width, int height) {
+	public BufferedImage setup(String imagePath, double scale) {
         BufferedImage image = null;
 
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/" + imagePath + ".png")));
+        	InputStream src = getClass().getResourceAsStream("/me/jamboxman5/abnpgame" + imagePath + ".png");
+            image = ImageIO.read(src);
 
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
+            System.out.println(imagePath);
         }
 
-        return Utilities.scaleImage(image, width, height);
+        return Utilities.scaleImage(image, (int)(image.getWidth() * scale), (int)(image.getHeight() * scale));
     }
 	
 	public void moveIfCollisionNotDetected() {
@@ -77,6 +79,8 @@ public abstract class Entity {
 	public double getSpeed() { return speed*gp.getZoom(); }
 	public double getWorldX() { return worldX; }
 	public double getWorldY() { return worldY; }
+	public double getAdjustedWorldX() { return worldX/gp.getZoom(); }
+	public double getAdjustedWorldY() { return worldY/gp.getZoom(); }
 	public String getDirection() { return direction; }
 
 	public String getName() { return name; }

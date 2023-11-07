@@ -88,13 +88,15 @@ public class MapManager {
     			x = 583;
     			y = 483;
     		} else if (imageName.equals("Airbase")) {
-    		
+    			x = 583;
+    			y = 483;
     		} else if (imageName.equals("Karnivale")) {
-    			
+    			x = 583;
+    			y = 483;
     		} 
             m = new Map(imageName, x, y);
             m.setImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/me/jamboxman5/abnpgame/resources/maps/" + imageName + ".png"))));
-            m.setImage(Utilities.scaleImage(m.getImage(), (int)(m.getImage().getWidth()*1.2), (int)(m.getImage().getHeight()*1.2)));
+            m.setImage(Utilities.scaleImage(m.getImage(), (int)(m.getImage().getWidth()*1.4), (int)(m.getImage().getHeight()*1.4)));
             maps.add(m);
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,8 +132,8 @@ public class MapManager {
 	public void movePlayer(String username, double x, double y, double rotation, boolean invert) {
 		int index = getConnectedPlayerIndex(username);
 		if (index < 0) return;
-		entities.get(index).setWorldX(x*gp.getZoom());
-		entities.get(index).setWorldY(y*gp.getZoom());
+		entities.get(index).setWorldX(x*(1/gp.getZoom()));
+		entities.get(index).setWorldY(y*(1/gp.getZoom()));
 		entities.get(index).setRotation(rotation);
 		((OnlinePlayer)entities.get(index)).setInvert(invert);
 	}

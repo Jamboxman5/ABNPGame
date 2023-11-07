@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.assets.entity.player.Player;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
@@ -264,7 +265,7 @@ public class GamePanel extends JPanel implements Runnable {
 		socketServer.start();
 		}
 		
-		setSocketClient(new GameClient(this, "localhost"));
+		setSocketClient(new GameClient(this, "67.246.103.207"));
 		getSocketClient().start();
 		
 		player = new OnlinePlayer(this, keyHandler, name, null, -1);
@@ -346,21 +347,21 @@ public class GamePanel extends JPanel implements Runnable {
 	public void setZoom(float zoom) { zoomScale = zoom; }
 
 	public void zoomIn() {
-//		setZoom(getZoom()+.002f);
-//		for (Entity e : mapManager.getEntities()) {
-//			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()-.00205)));
-//			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()-.00205)));
-//		}
-//		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()-.00205)));
-//		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()-.00205)));
+		setZoom(getZoom()+.002f);
+		for (Entity e : mapManager.getEntities()) {
+			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()-.00205)));
+			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()-.00205)));
+		}
+		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()-.00205)));
+		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()-.00205)));
 	}
 	public void zoomOut() {
-//		setZoom(getZoom()-.005f);
-//		for (Entity e : mapManager.getEntities()) {
-//			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()+.00505)));
-//			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()+.00505)));
-//		}
-////		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()+.00505)));
-////		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()+.00505)));
+		setZoom(getZoom()-.005f);
+		for (Entity e : mapManager.getEntities()) {
+			e.setWorldX(e.getWorldX()*(getZoom()/(getZoom()+.00505)));
+			e.setWorldY(e.getWorldY()*(getZoom()/(getZoom()+.00505)));
+		}
+		player.setWorldX(player.getWorldX()*(getZoom()/(getZoom()+.00505)));
+		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()+.00505)));
 	}
 }

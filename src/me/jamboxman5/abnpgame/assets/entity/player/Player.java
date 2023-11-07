@@ -9,7 +9,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
 import me.jamboxman5.abnpgame.assets.entity.Mob;
-import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
@@ -39,7 +38,7 @@ public class Player extends Mob {
 	}
 
 	private void setImages() {
-		setSprite(setup("/resources/entity/player/Player_Rifle", 100,80));
+		setSprite(setup("/resources/entity/player/Player_Rifle", .33));
 		
 	}
 
@@ -223,7 +222,7 @@ public class Player extends Mob {
 		    
 		    g2.transform(tx);
 
-		    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(22*gp.getZoom())), null);
+		    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(19*gp.getZoom())), null);
 		    g2.setTransform(oldTrans);
 
 	}
