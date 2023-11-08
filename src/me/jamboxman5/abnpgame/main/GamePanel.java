@@ -113,9 +113,9 @@ public class GamePanel extends JPanel implements Runnable {
         	if (player == null) return;
             // TILES
             mapManager.draw(graphics2D);
+			mapManager.drawProjectiles(graphics2D);
 			mapManager.drawEntities(graphics2D);
 			player.draw(graphics2D);
-			mapManager.drawProjectiles(graphics2D);
 			if (getMousePosition() != null) {
             	mouseMotionHandler.draw(graphics2D);
             }
@@ -194,13 +194,23 @@ public class GamePanel extends JPanel implements Runnable {
         Utilities.drawStringShadow(g2, debugTXT, x, y);
         g2.drawString(debugTXT, x, y);
         //
-        debugTXT = "Mouse X: " + String.format("%,.2f", mousePointer.getX());
-        y+=spacer;
-        x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
-        Utilities.drawStringShadow(g2, debugTXT, x, y);
-        g2.drawString(debugTXT, x, y);
+        
+        if (mousePointer != null) {
+        	debugTXT = "Mouse X: " + String.format("%,.2f", mousePointer.getX());
+            y+=spacer;
+            x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
+            Utilities.drawStringShadow(g2, debugTXT, x, y);
+            g2.drawString(debugTXT, x, y);
+            //
+            debugTXT = "Mouse Y: " + String.format("%,.2f", mousePointer.getY());
+            y+=spacer;
+            x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
+            Utilities.drawStringShadow(g2, debugTXT, x, y);
+            g2.drawString(debugTXT, x, y);
+        }
+        
         //
-        debugTXT = "Mouse Y: " + String.format("%,.2f", mousePointer.getY());
+        debugTXT = "Active Projectiles: " + mapManager.projectiles.size();
         y+=spacer;
         x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);

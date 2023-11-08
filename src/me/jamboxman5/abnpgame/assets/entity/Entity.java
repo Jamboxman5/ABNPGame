@@ -1,6 +1,7 @@
 package me.jamboxman5.abnpgame.assets.entity;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,8 @@ public abstract class Entity {
 	protected String name;
 	protected double speed;
 	protected double rotation;
+	protected Rectangle collision;
+	protected int collisionWidth;
 	
 	protected String direction;
 //	private int spriteCounter = 0;

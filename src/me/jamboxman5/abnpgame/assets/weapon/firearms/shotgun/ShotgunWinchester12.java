@@ -1,16 +1,19 @@
 package me.jamboxman5.abnpgame.assets.weapon.firearms.shotgun;
 
+import me.jamboxman5.abnpgame.assets.entity.projectile.ammo.Ammo;
+import me.jamboxman5.abnpgame.assets.entity.projectile.ammo.ShellAmmo;
 import me.jamboxman5.abnpgame.assets.weapon.firearms.Firearm;
 import me.jamboxman5.abnpgame.assets.weapon.mods.WeaponModLoadout;
 
 public class ShotgunWinchester12 extends Firearm {
 
 	public ShotgunWinchester12() {
-		this(new WeaponModLoadout(), 100, 6);
+		this(new WeaponModLoadout(), new ShellAmmo(), 6);
 	}
 	
-	public ShotgunWinchester12(WeaponModLoadout mods, int ammo, int loadedAmmo) {
+	public ShotgunWinchester12(WeaponModLoadout mods, Ammo ammo, int loadedAmmo) {
 		this.attackSound = "sfx/weapon/shotgun/Shotgun_Shot";
+		this.reloadSound = "sfx/weapon/rifle/Assault_Rifle_Reload";
 		this.attackRateMS = 1100;
 		this.damage = 85;
 		this.equippedMods = mods;
@@ -20,8 +23,10 @@ public class ShotgunWinchester12 extends Firearm {
 		this.playerSprite = setup("/resources/entity/player/Player_Shotgun", .33);
 		this.hudSprite = setup("/resources/weapon/shotgun/Winchester12", .33);
 		this.loaded = loadedAmmo;
-		this.ammoCount = ammo;
+		this.currentAmmo = ammo;
 		this.name = "Winchester 12GA";
+		this.firingVelocity = 150;
+
 	}
 
 }

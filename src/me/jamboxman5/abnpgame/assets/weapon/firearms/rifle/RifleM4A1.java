@@ -1,16 +1,19 @@
 package me.jamboxman5.abnpgame.assets.weapon.firearms.rifle;
 
+import me.jamboxman5.abnpgame.assets.entity.projectile.ammo.Ammo;
+import me.jamboxman5.abnpgame.assets.entity.projectile.ammo.StandardAmmo;
 import me.jamboxman5.abnpgame.assets.weapon.firearms.Firearm;
 import me.jamboxman5.abnpgame.assets.weapon.mods.WeaponModLoadout;
 
 public class RifleM4A1 extends Firearm {
 
 	public RifleM4A1() {
-		this(new WeaponModLoadout(), 100, 30);
+		this(new WeaponModLoadout(), new StandardAmmo(), 30);
 	}
 	
-	public RifleM4A1(WeaponModLoadout mods, int ammo, int loadedAmmo) {
+	public RifleM4A1(WeaponModLoadout mods, Ammo ammo, int loadedAmmo) {
 		this.attackSound = "sfx/weapon/rifle/Assault_Rifle_Shot";
+		this.reloadSound = "sfx/weapon/rifle/Assault_Rifle_Reload";
 		this.attackRateMS = 86;
 		this.damage = 30;
 		this.equippedMods = mods;
@@ -20,8 +23,9 @@ public class RifleM4A1 extends Firearm {
 		this.playerSprite = setup("/resources/entity/player/Player_Rifle", .33);
 		this.hudSprite = setup("/resources/weapon/rifle/M4A1", .42);
 		this.loaded = loadedAmmo;
-		this.ammoCount = ammo;
+		this.currentAmmo = ammo;
 		this.name = "M4A1";
+		this.firingVelocity = 150;
 	}
 
 }

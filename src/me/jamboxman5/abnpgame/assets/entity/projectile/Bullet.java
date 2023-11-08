@@ -3,6 +3,7 @@ package me.jamboxman5.abnpgame.assets.entity.projectile;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 
 import me.jamboxman5.abnpgame.main.GamePanel;
 
@@ -23,6 +24,11 @@ public class Bullet extends Projectile{
 		if (traveled > range) GamePanel.getInstance().getMapManager().disposeProjectile(this);
 		int xComp = (int) (speed * Math.cos(rotation));
 		int yComp = (int) (speed * Math.sin(rotation));
+		
+		int[] xPoints = {(int) worldX, (int) (worldX+xComp)};
+		int[] yPoints = {(int) worldY, (int) (worldY+yComp)};
+		Polygon bulletCollision = new Polygon(xPoints, yPoints, 2);
+		
 		worldX += xComp;
 		worldY += yComp;
 		traveled += speed;
@@ -39,7 +45,11 @@ public class Bullet extends Projectile{
 		int yComp = (int) (speed * Math.sin(rotation));
 		g2.setColor(new Color(255,255,180));
 		g2.setStroke(new BasicStroke(2));
-		g2.drawLine(x, y, (int)x+xComp, (int)y+yComp);
+		g2.drawLine(x-(xComp/2), y-(yComp/2), (int)x+xComp*2, (int)y+yComp*2);
+	}
+	
+	public void shoot() {
+		
 	}
 
 }

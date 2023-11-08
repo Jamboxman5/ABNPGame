@@ -5,6 +5,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -47,6 +48,11 @@ public class Player extends Mob {
 	private void setDefaults() {		
 		setSpeed(6.5);
 		setRotation(0);
+		collisionWidth = 40;
+		collision = new Rectangle((int)(getAdjustedWorldX())-(collisionWidth/4), 
+				  (int)(getAdjustedWorldY())-(collisionWidth/2), 
+				  (int)(collisionWidth) , 
+				  (int)(collisionWidth*1.5));
 	}
 	
 	@Override
@@ -139,7 +145,10 @@ public class Player extends Mob {
 			} 
 			
 			if (xComp != 0.0 || yComp != 0.0) {
-				
+				collision.setBounds((int)(getAdjustedWorldX())-(collisionWidth/3), 
+						  (int)(getAdjustedWorldY())-(collisionWidth/2), 
+						  (int)(collisionWidth) , 
+						  (int)(collisionWidth*1.5));
 			} else {
 				isMoving = false;
 			}
@@ -226,6 +235,14 @@ public class Player extends Mob {
 			    g2.drawImage(sprite, (int)(-sprite.getWidth()+(60*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
 		    }
 		    g2.setTransform(oldTrans);
+		    
+		    if (gp.isDebugMode()) {
+		    	x = (int) (collision.x - getAdjustedWorldX() + getAdjustedScreenX());
+		        y = (int) (collision.y - getAdjustedWorldY() + getAdjustedScreenY());
+		        g2.setColor(Color.red);
+		    	g2.setStroke(new BasicStroke(3));
+		    	g2.drawRect((int)(x), (int)(y), (int)(collision.width*gp.getZoom()),(int) (collision.height*gp.getZoom()));
+		    }
 
 	}
 
