@@ -1,8 +1,9 @@
 package me.jamboxman5.abnpgame.assets.weapon;
 
 import java.awt.image.BufferedImage;
-import java.util.concurrent.TimeUnit;
 
+import me.jamboxman5.abnpgame.assets.weapon.mods.RedDotSight;
+import me.jamboxman5.abnpgame.assets.weapon.mods.WeaponMod;
 import me.jamboxman5.abnpgame.assets.weapon.mods.WeaponModLoadout;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.util.Utilities;
@@ -35,5 +36,11 @@ public abstract class Weapon {
 	    if (reloading) return false;
 	    if ((System.currentTimeMillis() - lastAttack) < attackRateMS) return false;
 		return true;
+	}
+	public boolean hasRedDotSight() {
+		for (WeaponMod m : equippedMods.getMods()) {
+			if (m instanceof RedDotSight) return true;
+		}
+		return false;
 	}
 }

@@ -115,6 +115,7 @@ public class GamePanel extends JPanel implements Runnable {
             mapManager.draw(graphics2D);
 			mapManager.drawEntities(graphics2D);
 			player.draw(graphics2D);
+			mapManager.drawProjectiles(graphics2D);
 			if (getMousePosition() != null) {
             	mouseMotionHandler.draw(graphics2D);
             }
@@ -143,6 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
 			player.update();
 			ui.update();
 			mapManager.updateEntities();
+			mapManager.updateProjectiles();
 		} 
 		
 	}

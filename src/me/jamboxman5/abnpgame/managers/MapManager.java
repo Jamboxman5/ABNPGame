@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
+import me.jamboxman5.abnpgame.assets.entity.projectile.Projectile;
 import me.jamboxman5.abnpgame.assets.maps.Map;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
@@ -22,6 +23,9 @@ public class MapManager {
 	private final GamePanel gp;
 	
 	public List<Entity> entities = new ArrayList<>();
+	public List<Entity> disposingEntities = new ArrayList<>();
+	public List<Projectile> projectiles = new ArrayList<>();
+	public List<Projectile> disposingProjectiles = new ArrayList<>();
 	public List<Map> maps = new ArrayList<>();
 	
 	Map m;
@@ -68,10 +72,34 @@ public class MapManager {
 	
 	public void updateEntities() {
 		for (Entity e : entities) { e.update(); }
+		for (Entity e : disposingEntities) {
+			if (entities.contains(e)) entities.remove(e);
+		}
+		disposingEntities = new ArrayList<>();
 	}
 	
 	public void drawEntities(Graphics2D g2) {
 		for (Entity e : entities) { e.draw(g2); }
+	}
+	
+	public void updateProjectiles() {
+		for (Projectile p : projectiles) { p.update(); }
+		for (Projectile p : disposingProjectiles) {
+			if (projectiles.contains(p)) projectiles.remove(p);
+		}
+		disposingEntities = new ArrayList<>();
+	}
+	
+	public void drawProjectiles(Graphics2D g2) {
+		for (Projectile p : projectiles) { p.draw(g2); }
+	}
+	
+	public void addProjectile(Projectile p) {
+		projectiles.add(p);
+	}
+	
+	public void disposeProjectile(Projectile p) {
+		disposingProjectiles.add(p);
 	}
 	
 	public void setup(String imageName) {

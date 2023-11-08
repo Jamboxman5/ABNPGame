@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import me.jamboxman5.abnpgame.assets.entity.projectile.Bullet;
 import me.jamboxman5.abnpgame.assets.weapon.Weapon;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.util.Utilities;
@@ -39,9 +40,15 @@ public class Firearm extends Weapon {
 			reload(); return;
 		}
 		if (!canAttack()) return;
-		GamePanel.getInstance().playSoundEffect(this.attackSound);
+		GamePanel gp = GamePanel.getInstance();
+		gp.playSoundEffect(this.attackSound);
 		this.lastAttack = System.currentTimeMillis();
 		loaded -= 1;
+		gp.getMapManager().addProjectile(new Bullet(gp.getPlayer().getAdjustedRotation(), 
+													150, 
+													gp.getPlayer().getAdjustedWorldX(), 
+													gp.getPlayer().getAdjustedWorldY(),  
+													150));
 	}
 	public void reload() {
 		reloading = true;
@@ -61,6 +68,7 @@ public class Firearm extends Weapon {
 			}
 		}.start();
 	}
+	
 	@Override
 	public void attack() {
 		shoot();

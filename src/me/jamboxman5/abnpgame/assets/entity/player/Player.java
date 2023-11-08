@@ -200,16 +200,11 @@ public class Player extends Mob {
 		    tx.setToTranslation(x, y);
 		    
 			if (gp.getPlayer().equals(this)) {
-				Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
-		        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-		        g2.setComposite(comp);
-				g2.setStroke(new BasicStroke(2));
-			    g2.drawLine(x, y, (int)gp.getMousePointer().getX(), (int)gp.getMousePointer().getY());
-			    g2.fillOval((int)gp.getMousePointer().getX()-2, (int)gp.getMousePointer().getY()-2, 4, 4);
-			    g2.setComposite(old);
-			    g2.setColor(new Color(255,200,200));
-			    g2.fillOval((int)gp.getMousePointer().getX()-1, (int)gp.getMousePointer().getY()-1, 1, 1);
-
+				
+				if (weapons.getActiveWeapon().hasRedDotSight()) {
+					drawRedDotSight(g2, x, y);
+				}
+				
 			    if (gp.getMousePointer().getX() == getAdjustedScreenX() &&
 				   	gp.getMousePointer().getY() == getAdjustedScreenY()) {
 				   	tx.rotate(0);
@@ -234,7 +229,17 @@ public class Player extends Mob {
 
 	}
 
-	
+	public void drawRedDotSight(Graphics2D g2, int x, int y) {
+		Composite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
+        Composite old = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+        g2.setComposite(comp);
+		g2.setStroke(new BasicStroke(2));
+	    g2.drawLine(x, y, (int)gp.getMousePointer().getX(), (int)gp.getMousePointer().getY());
+	    g2.fillOval((int)gp.getMousePointer().getX()-2, (int)gp.getMousePointer().getY()-2, 4, 4);
+	    g2.setComposite(old);
+	    g2.setColor(new Color(255,200,200));
+	    g2.fillOval((int)gp.getMousePointer().getX()-1, (int)gp.getMousePointer().getY()-1, 1, 1);
+	}
 
 	public double getAngleToCursor() {
 		try {
@@ -284,5 +289,9 @@ public class Player extends Mob {
 		return false;
 	}
 	public String getUsername() { return name; }
+
+	public double getAdjustedRotation() {
+		return getDrawingAngle();
+	}
 
 }
