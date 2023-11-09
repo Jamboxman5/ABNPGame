@@ -6,7 +6,7 @@ public class ShellAmmo extends Ammo {
 		this.ammoCount = ammoCount;
 		this.damageBoost = 1;
 		this.speedBoost = 1;
-		this.spread = .5;
+		this.spread = 1;
 		this.rangeBoost = 1;
 		this.shots = 5;
 	}
