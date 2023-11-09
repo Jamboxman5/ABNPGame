@@ -23,6 +23,7 @@ public abstract class Entity {
 	protected double rotation;
 	protected Rectangle collision;
 	protected int collisionWidth;
+	protected int animFrame;
 	
 	protected String direction;
 //	private int spriteCounter = 0;

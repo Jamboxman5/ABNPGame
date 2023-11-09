@@ -17,8 +17,12 @@ public abstract class Weapon {
 	
 	protected long attackRateMS;
 	protected long lastAttack;
-	
-	protected BufferedImage playerSprite;
+		
+	public BufferedImage[] idleSprites;
+	public BufferedImage[] shootSprites;
+	public BufferedImage[] reloadSprites;
+	public BufferedImage[] activeSprites;
+			
 	protected BufferedImage dropSprite;
 	protected BufferedImage hudSprite;
 	protected String attackSound;
@@ -26,8 +30,11 @@ public abstract class Weapon {
 
 	protected WeaponModLoadout equippedMods;
 	
-	public BufferedImage getPlayerSprite() { 
-		return Utilities.scaleImage(playerSprite, (int)(playerSprite.getWidth()*(GamePanel.getInstance().getZoom())), (int)(playerSprite.getHeight()*(GamePanel.getInstance().getZoom()))) ;
+	public BufferedImage getPlayerSprite(int idx) {
+		return Utilities.scaleImage(activeSprites[idx], 
+									(int)(activeSprites[idx].getWidth()*(GamePanel.getInstance().getZoom())), 
+									(int)(activeSprites[idx].getHeight()*(GamePanel.getInstance().getZoom())));
+		
 	}
 	public BufferedImage getHudSprite() { return hudSprite; }
 	public String getName() { return name; }
@@ -43,4 +50,5 @@ public abstract class Weapon {
 		}
 		return false;
 	}
+	public void idle() { activeSprites = idleSprites; }
 }

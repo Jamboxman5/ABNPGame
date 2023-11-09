@@ -63,6 +63,13 @@ public class Player extends Mob {
 			gp.zoomIn();
 		}
 		
+		animFrame -= 1;
+		
+		if (animFrame < 0) {
+			weapons.getActiveWeapon().idle();
+			animFrame = weapons.getActiveWeapon().idleSprites.length-1;
+		}
+		
 		setRotation(getAngleToCursor());
 		
 		if (keyH.isForwardPressed()) {
@@ -145,18 +152,20 @@ public class Player extends Mob {
 			} 
 			
 			if (xComp != 0.0 || yComp != 0.0) {
-				collision.setBounds((int)(getAdjustedWorldX())-(collisionWidth/3), 
-						  (int)(getAdjustedWorldY())-(collisionWidth/2), 
-						  (int)(collisionWidth) , 
-						  (int)(collisionWidth*1.5));
+				
 			} else {
 				isMoving = false;
 			}
-            
+
             resetEnterPressedValue();
 		} else {
 			isMoving = false;
 		}
+		
+		collision.setBounds((int)(getAdjustedWorldX()) - (collisionWidth/2), 
+				  (int)(getAdjustedWorldY()) - (collisionWidth/2), 
+				  (int)(collisionWidth) , 
+				  (int)(collisionWidth*1.5));
 	}
 	
 	public void basicMove() {
@@ -203,6 +212,9 @@ public class Player extends Mob {
 						
 			g2.setColor(Color.red);
 			
+//			g2.drawLine(0, gp.getHeight()/2, gp.getWidth(), gp.getHeight()/2);
+//		    g2.drawLine(gp.getWidth()/2, 0, gp.getWidth()/2, gp.getHeight());
+			
 			AffineTransform tx = new AffineTransform();
 		    AffineTransform oldTrans = g2.getTransform();
 			
@@ -228,12 +240,9 @@ public class Player extends Mob {
 		    
 		    g2.transform(tx);
 
-		    BufferedImage sprite = weapons.getActiveWeapon().getPlayerSprite();
-		    if (weapons.getActiveFirearm().getName() == "M1911") {
-			    g2.drawImage(sprite, (int)(-sprite.getWidth()+(37*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
-		    } else {
-			    g2.drawImage(sprite, (int)(-sprite.getWidth()+(60*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
-		    }
+		    BufferedImage sprite = weapons.getActiveWeapon().getPlayerSprite(animFrame);
+		    g2.drawImage(sprite, (int)(-sprite.getWidth()+(85*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
+		    
 		    g2.setTransform(oldTrans);
 		    
 		    if (gp.isDebugMode()) {
@@ -309,6 +318,10 @@ public class Player extends Mob {
 
 	public double getAdjustedRotation() {
 		return getDrawingAngle();
+	}
+
+	public void setAnimFrame(int i) {
+		animFrame = i;
 	}
 
 }

@@ -45,6 +45,8 @@ public class Firearm extends Weapon {
 		}
 		if (!canAttack()) return;
 		GamePanel gp = GamePanel.getInstance();
+		activeSprites = shootSprites;
+		gp.getPlayer().setAnimFrame(shootSprites.length-1);
 		gp.playSoundEffect(this.attackSound);
 		this.lastAttack = System.currentTimeMillis();
 		loaded -= 1;
@@ -61,6 +63,8 @@ public class Firearm extends Weapon {
 	}
 	public void reload() {
 		reloading = true;
+		activeSprites = reloadSprites;
+		GamePanel.getInstance().getPlayer().setAnimFrame(reloadSprites.length-1);
 		GamePanel.getInstance().playSoundEffect(this.reloadSound);
 		new Thread() {
 			@Override

@@ -1,5 +1,7 @@
 package me.jamboxman5.abnpgame.assets.weapon.firearms.pistol;
 
+import java.awt.image.BufferedImage;
+
 import me.jamboxman5.abnpgame.assets.entity.projectile.ammo.Ammo;
 import me.jamboxman5.abnpgame.assets.entity.projectile.ammo.StandardAmmo;
 import me.jamboxman5.abnpgame.assets.weapon.firearms.Firearm;
@@ -12,6 +14,15 @@ public class Pistol1911 extends Firearm {
 	}
 	
 	public Pistol1911(WeaponModLoadout mods, Ammo ammo, int loadedAmmo) {
+		BufferedImage[] iSprites = {setup("/resources/entity/player/handgun/Player_Handgun", .33)};
+		BufferedImage[] sSprites = {setup("/resources/entity/player/handgun/Player_Handgun_Shoot_2", .33),
+									setup("/resources/entity/player/handgun/Player_Handgun_Shoot_2", .33),
+									setup("/resources/entity/player/handgun/Player_Handgun_Shoot_1", .33),
+									setup("/resources/entity/player/handgun/Player_Handgun_Shoot_1", .33),
+									setup("/resources/entity/player/handgun/Player_Handgun_Shoot_0", .33),
+									setup("/resources/entity/player/handgun/Player_Handgun_Shoot_0", .33),
+									setup("/resources/entity/player/handgun/Player_Handgun_Shoot_0", .33)};
+		BufferedImage[] rSprites = {setup("/resources/entity/player/handgun/Player_Handgun", .33)};
 		this.attackSound = "sfx/weapon/pistol/Pistol_Shot";
 		this.reloadSound = "sfx/weapon/rifle/Assault_Rifle_Reload";
 		this.attackRateMS = 350;
@@ -20,7 +31,10 @@ public class Pistol1911 extends Firearm {
 		this.reloadSpeedMS = 1500;
 		this.magSize = 8;
 		this.range = 480;
-		this.playerSprite = setup("/resources/entity/player/Player_Handgun", .33);
+		this.idleSprites = iSprites;
+		this.shootSprites = sSprites;
+		this.reloadSprites = rSprites;
+		this.activeSprites = idleSprites;
 		this.hudSprite = setup("/resources/weapon/pistol/1911", .33);
 		this.loaded = loadedAmmo;
 		this.currentAmmo = ammo;
