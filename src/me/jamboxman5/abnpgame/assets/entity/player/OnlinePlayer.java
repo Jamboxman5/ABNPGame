@@ -3,6 +3,7 @@ package me.jamboxman5.abnpgame.assets.entity.player;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.net.InetAddress;
 
 import me.jamboxman5.abnpgame.main.GamePanel;
@@ -14,8 +15,6 @@ public class OnlinePlayer extends Player {
 
 	public InetAddress ipAddress;
 	public int port;
-	private boolean invert;
-	private double lastRotation;
 	
 	public OnlinePlayer(GamePanel gamePanel, KeyHandler keyHandler, String name, InetAddress ipAddress, int port) {
 		super(gamePanel, keyHandler, name);
@@ -35,12 +34,9 @@ public class OnlinePlayer extends Player {
 	public void update() {
 		if (gp.getPlayer() == this) {
 			super.update();
-			if (isMoving || (rotation != lastRotation)) {
-				boolean sendInv = (int)gp.getMousePointer().getX() <= getAdjustedScreenX();
-				Packet02Move packet = new Packet02Move(getUsername(), worldX/gp.getZoom(), worldY/gp.getZoom(), rotation, sendInv);
-				packet.writeData(gp.getClient());
-			}
-			lastRotation = rotation;
+			
+			Packet02Move packetMove = new Packet02Move(getUsername(), getAdjustedWorldX(), getAdjustedWorldY(), getAdjustedRotation());
+			packetMove.writeData(gp.getClient());
 		}
 	}
 	
@@ -71,18 +67,13 @@ public class OnlinePlayer extends Player {
 		
 	    tx.setToTranslation(x, y);
         
-	    if (invert) {
-			   tx.rotate(rotation - Math.toRadians(180));
-		} else {
-			tx.rotate(rotation);
-		}        
+	    tx.rotate(rotation);
+	    
 	    g2.transform(tx);
 
-	    g2.drawImage(getSprite(), (int)(-getSprite().getWidth()+(60*gp.getZoom())), (int)(-getSprite().getHeight()+(20*gp.getZoom())), null);
+	    BufferedImage sprite = weapons.getActiveWeapon().getPlayerSprite(animFrame);
+	    g2.drawImage(sprite, (int)(-sprite.getWidth()+(85*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
 	    g2.setTransform(oldTrans);
-	}
-	public void setInvert(boolean invert) {
-		this.invert = invert;
 	}
 
 }

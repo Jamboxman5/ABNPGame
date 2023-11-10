@@ -79,7 +79,7 @@ public class GameClient extends Thread {
 	}
 	
 	private void handleMove(Packet02Move packet) {
-		gp.getMapManager().movePlayer(packet.getUsername(), packet.getX(), packet.getY(), packet.getRotation(), packet.invertAngle()); 
+		gp.getMapManager().movePlayer(packet.getUsername(), packet.getX(), packet.getY(), packet.getRotation()); 
 	}
 
 	public void sendData(byte[] data) {

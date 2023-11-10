@@ -157,13 +157,12 @@ public class MapManager {
 		return -1;
 	}
 	
-	public void movePlayer(String username, double x, double y, double rotation, boolean invert) {
+	public void movePlayer(String username, double x, double y, double rotation) {
 		int index = getConnectedPlayerIndex(username);
 		if (index < 0) return;
 		entities.get(index).setWorldX(x*gp.getZoom());
 		entities.get(index).setWorldY(y*gp.getZoom());
 		entities.get(index).setRotation(rotation);
-		((OnlinePlayer)entities.get(index)).setInvert(invert);
 	}
 
 	public void setMap(int mapIndex) {
