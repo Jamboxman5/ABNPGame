@@ -51,4 +51,7 @@ public abstract class Weapon {
 		return false;
 	}
 	public void idle() { activeSprites = idleSprites; }
+	public void setMods(WeaponModLoadout mods) {
+		equippedMods = mods;
+	}
 }

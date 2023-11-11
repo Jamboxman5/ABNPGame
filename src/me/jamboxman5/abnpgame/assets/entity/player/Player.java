@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import me.jamboxman5.abnpgame.assets.entity.Mob;
 import me.jamboxman5.abnpgame.assets.weapon.Weapon;
 import me.jamboxman5.abnpgame.assets.weapon.WeaponLoadout;
+import me.jamboxman5.abnpgame.assets.weapon.mods.RedDotSight;
+import me.jamboxman5.abnpgame.assets.weapon.mods.WeaponModLoadout;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.managers.KeyHandler;
@@ -34,7 +36,10 @@ public class Player extends Mob {
 			  gamePanel.getMapManager().getActiveMap().getDefaultY(), 
 			  defaultSpeed);
 
+		WeaponModLoadout mods = new WeaponModLoadout();
+		mods.addMod(new RedDotSight());
 		weapons = new WeaponLoadout();
+		weapons.getActiveWeapon().setMods(mods);
 		
 		keyH = keyHandler;
 		gamerTag = name;
@@ -48,11 +53,11 @@ public class Player extends Mob {
 	private void setDefaults() {		
 		setSpeed(6.5);
 		setRotation(0);
-		collisionWidth = 40;
+		collisionWidth = 50;
 		collision = new Rectangle((int)(getAdjustedWorldX())-(collisionWidth/4), 
 				  (int)(getAdjustedWorldY())-(collisionWidth/2), 
-				  (int)(collisionWidth) , 
-				  (int)(collisionWidth*1.5));
+				  (int)(collisionWidth*1.5) , 
+				  (int)(collisionWidth));
 	}
 	
 	@Override
@@ -162,11 +167,18 @@ public class Player extends Mob {
 			isMoving = false;
 		}
 		
-		collision.setBounds((int)(getAdjustedWorldX()) - (collisionWidth/2), 
-				  (int)(getAdjustedWorldY()) - (collisionWidth/2), 
-				  (int)(collisionWidth) , 
-				  (int)(collisionWidth*1.5));
+		if (gp.getMouseHandler().clicking()) {
+			weapons.getActiveWeapon().attack();
+		}
+		int adjustedWidth = (int) (collisionWidth * gp.getZoom());
+		collision = new Rectangle((int)(worldX-(adjustedWidth/2.5)), 
+				  (int)(worldY-(adjustedWidth/2.5)), 
+				  (int)(adjustedWidth) , 
+				  (int)(adjustedWidth));
+		
 	}
+	
+	
 	
 	public void basicMove() {
 		
@@ -242,15 +254,18 @@ public class Player extends Mob {
 
 		    BufferedImage sprite = weapons.getActiveWeapon().getPlayerSprite(animFrame);
 		    g2.drawImage(sprite, (int)(-sprite.getWidth()+(85*gp.getZoom())), (int)(-sprite.getHeight()+(18*gp.getZoom())), null);
-		    
+		    g2.setTransform(new AffineTransform());
 		    g2.setTransform(oldTrans);
-		    
+
 		    if (gp.isDebugMode()) {
-		    	x = (int) (collision.x - getAdjustedWorldX() + getAdjustedScreenX());
-		        y = (int) (collision.y - getAdjustedWorldY() + getAdjustedScreenY());
+		    	x = (int) (collision.x - gp.getPlayer().getWorldX() + gp.getPlayer().getAdjustedScreenX());
+		        y = (int) (collision.y - gp.getPlayer().getWorldY() + gp.getPlayer().getAdjustedScreenY());
+
 		        g2.setColor(Color.red);
 		    	g2.setStroke(new BasicStroke(3));
-		    	g2.drawRect((int)(x), (int)(y), (int)(collision.width*gp.getZoom()),(int) (collision.height*gp.getZoom()));
+		    	g2.drawRect(x, y, collision.width, collision.height);
+
+//		    	g2.drawRect((int)(x), (int)(y), (int)(collision.width*gp.getZoom()),(int) (collision.height*gp.getZoom()));
 		    }
 
 	}

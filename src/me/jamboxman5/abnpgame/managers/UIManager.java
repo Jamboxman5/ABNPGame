@@ -107,8 +107,8 @@ public class UIManager {
 				keyH.setEnterPressed(false);
 				switch(menuIndex) {
 				case 0:
-					gp.moveToMapSelect(GameStage.InGameMultiplayer);
-		            gp.playSoundEffect("sfx/menu/Menu_Select");
+//					gp.moveToMapSelect(GameStage.InGameMultiplayer);
+//		            gp.playSoundEffect("sfx/menu/Menu_Select");
 					break;
 				case 1:
 					gp.moveToMultiplayerGame(false);

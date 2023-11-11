@@ -28,9 +28,7 @@ public class MouseHandler implements MouseListener {
 	}
 
 	private void handleInGameClick() {
-		if (leftMouseHeld) {
-			gp.getPlayer().getWeaponLoadout().getActiveWeapon().attack();
-		}
+		
 	}
 
 	@Override
@@ -59,7 +57,7 @@ public class MouseHandler implements MouseListener {
 		
 	}
 
-
+	public boolean clicking() { return leftMouseHeld; }
 	
 	
 }

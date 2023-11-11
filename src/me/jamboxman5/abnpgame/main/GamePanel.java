@@ -175,20 +175,22 @@ public class GamePanel extends JPanel implements Runnable {
         long durationInMs = TimeUnit.NANOSECONDS.toMillis(passedTime);
 
         
-        String debugTXT = "World X: " + String.format("%,.2f", getPlayer().getWorldX()*getZoom());
+        String debugTXT = "X: " + String.format("%,.2f", getPlayer().getAdjustedWorldX()) +
+        				  " | Y: " + String.format("%,.2f", getPlayer().getAdjustedWorldY());
         int y = 180;
         int spacer = 30;
         int x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);
         g2.drawString(debugTXT, x, y);
         //
-        debugTXT = "World Y: " + String.format("%,.2f", getPlayer().getWorldY()*getZoom());
+        debugTXT = "Collision X: " + String.format("%,.2f", getPlayer().getCollision().getBounds().getX()) +
+				  " | Y: " + String.format("%,.2f", getPlayer().getCollision().getBounds().getY());
         y+=spacer;
         x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);
         g2.drawString(debugTXT, x, y);
         //
-        debugTXT = "Player Rotation: " + String.format("%,.2f", Math.toDegrees(player.getAngleToCursor()));
+        debugTXT = "Player Rotation: " + String.format("%,.2f", Math.toDegrees(player.getDrawingAngle()));
         y+=spacer;
         x = Utilities.getXForRightAlignedText(getScreenWidth()-30, debugTXT, g2);
         Utilities.drawStringShadow(g2, debugTXT, x, y);
@@ -381,4 +383,8 @@ public class GamePanel extends JPanel implements Runnable {
 		player.setWorldY(player.getWorldY()*(getZoom()/(getZoom()+.00508)));
 	}
 	public static GamePanel getInstance() { return instance; }
+
+	public MouseHandler getMouseHandler() {
+		return mouseActionHandler;
+	}
 }
