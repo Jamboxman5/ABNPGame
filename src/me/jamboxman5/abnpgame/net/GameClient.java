@@ -15,6 +15,7 @@ import me.jamboxman5.abnpgame.net.packets.Packet00Login;
 import me.jamboxman5.abnpgame.net.packets.Packet01Disconnect;
 import me.jamboxman5.abnpgame.net.packets.Packet02Move;
 import me.jamboxman5.abnpgame.net.packets.Packet03Map;
+import me.jamboxman5.abnpgame.net.packets.Packet04Weapon;
 
 public class GameClient extends Thread {
 
@@ -72,14 +73,24 @@ public class GameClient extends Thread {
 		case MOVE:
 			packet = new Packet02Move(data);
 			handleMove((Packet02Move) packet);
+			break;
 		case MAP:
 			packet = new Packet03Map(data);
 			gp.getMapManager().setMap(((Packet03Map)packet).getMap());
+			break;
+		case WEAPON:
+			packet = new Packet04Weapon(data);
+			handleWeaponSwitch((Packet04Weapon) packet);
+			break;
 		}
 	}
 	
+	private void handleWeaponSwitch(Packet04Weapon packet) {
+		gp.getMapManager().setWeapon(packet.getUsername(), packet.getWeapon());
+	}
+	
 	private void handleMove(Packet02Move packet) {
-		gp.getMapManager().movePlayer(packet.getUsername(), packet.getX(), packet.getY(), packet.getRotation(), packet.invertAngle()); 
+		gp.getMapManager().movePlayer(packet.getUsername(), packet.getX(), packet.getY(), packet.getRotation()); 
 	}
 
 	public void sendData(byte[] data) {

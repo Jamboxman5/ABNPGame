@@ -41,6 +41,13 @@ public class Utilities {
 		g2.setComposite(old);
 		g2.setColor(oldColor);
 	}
+	public static void drawStringWithShadow(Graphics2D g2, String string, Color c, int x, int y) {
+		drawStringShadow(g2, string, x, y);
+		Color old = g2.getColor();
+		g2.setColor(c);
+		g2.drawString(string, x, y);
+		g2.setColor(old);
+	}
     public static int getXForScreenCenteredText(String text, GamePanel gamePanel, Graphics2D graphics2D) {
         int length = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
         return gamePanel.getScreenWidth() / 2 - length / 2;
@@ -62,5 +69,9 @@ public class Utilities {
 //        int length = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
 //        return tailX - length;
 //    }
+	public static int getTextWidth(String text, Graphics2D graphics2D) {
+        int width = (int) graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth();
+		return width;
+	}
 
 }

@@ -35,11 +35,12 @@ public class ShotgunWinchester12 extends Firearm {
 		this.shootSprites = sSprites;
 		this.reloadSprites = rSprites;
 		this.activeSprites = idleSprites;
-		this.hudSprite = setup("/resources/weapon/shotgun/Winchester12", .33);
+		this.hudSprite = setup("/resources/weapon/shotgun/Winchester12", .27);
 		this.loaded = loadedAmmo;
 		this.currentAmmo = ammo;
 		this.name = "Winchester 12GA";
 		this.firingVelocity = 150;
+		this.type = WeaponType.WINCHESTER12;
 
 	}
 

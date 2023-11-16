@@ -2,9 +2,9 @@ package me.jamboxman5.abnpgame.main;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +26,7 @@ import me.jamboxman5.abnpgame.net.GameClient;
 import me.jamboxman5.abnpgame.net.GameServer;
 import me.jamboxman5.abnpgame.net.packets.Packet00Login;
 import me.jamboxman5.abnpgame.net.packets.Packet01Disconnect;
+import me.jamboxman5.abnpgame.net.packets.Packet02Move;
 import me.jamboxman5.abnpgame.sound.SoundManager;
 import me.jamboxman5.abnpgame.util.Utilities;
 
@@ -86,7 +87,9 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	
     public void drawToScreen() {
-        Graphics graphics = getGraphics();
+        Graphics2D graphics = (Graphics2D) getGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics.drawImage(tempScreen, 0, 0, screenWidth, screenHeight, null);
         graphics.dispose();
     }
@@ -104,7 +107,7 @@ public class GamePanel extends JPanel implements Runnable {
             if (getMousePosition() != null) {
             	mouseMotionHandler.draw(graphics2D);
             }
-        } else if (stage == GameStage.MultiplayerMenu) {
+        } else if (stage == GameStage.ArcadeMenu) {
         	ui.draw(graphics2D);
             if (getMousePosition() != null) {
             	mouseMotionHandler.draw(graphics2D);
@@ -136,7 +139,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public void delta() {
 		mouseActionHandler.update();
 		if (stage == GameStage.MainMenu ||
-			stage == GameStage.MultiplayerMenu ||
+			stage == GameStage.ArcadeMenu ||
 			stage == GameStage.MapSelector) {
 			ui.update();
 		} else if (stage.toString().contains("InGame")){
@@ -250,7 +253,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public Player getPlayer() {	return player; }
 	public void setMousePointer(Point location) { mousePointer = location; }
 	public Point getMousePointer() { 
-		if (mousePointer == null) return new Point(player.getAdjustedScreenX(), player.getAdjustedScreenY());
+		if (mousePointer == null) return new Point(getWidth()/2, getHeight()/2);
 		else return mousePointer; 
 	}
 	public GameClient getClient() { return getSocketClient(); }
@@ -262,11 +265,13 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void quitGame() { System.exit(0); }
 
-	public void moveToMultiplayerMenu() {
-		setGameStage(GameStage.MultiplayerMenu);
+	public void moveToArcadeMenu() {
+		mouseMotionHandler.setupCursor("Cursor_Pointer");
+		setGameStage(GameStage.ArcadeMenu);
 	}
 	
 	public void moveToMapSelect(GameStage nextStage) {
+		mouseMotionHandler.setupCursor("Cursor_Pointer");
 		setGameStage(GameStage.MapSelector);
 		this.nextStage = nextStage;
 	}
@@ -283,7 +288,7 @@ public class GamePanel extends JPanel implements Runnable {
 		socketServer.start();
 		}
 		
-		setSocketClient(new GameClient(this, "67.246.103.207"));
+		setSocketClient(new GameClient(this, "192.168.1.23"));
 		getSocketClient().start();
 		
 		player = new OnlinePlayer(this, keyHandler, name, null, -1);
@@ -296,13 +301,15 @@ public class GamePanel extends JPanel implements Runnable {
 		music.stop();
 		loginPacket.writeData(getSocketClient());
 		
+		Packet02Move packet = new Packet02Move(player.getUsername(), player.getWorldX()/getZoom(),player.getWorldY()/getZoom(), player.getDrawingAngle());
+		packet.writeData(getClient());
 		
 		setGameStage(GameStage.InGameMultiplayer);
 	}
 
 	public void moveToSingleplayerGame() {
 		mouseMotionHandler.setupCursor("Cursor_Reticle");
-		player = new Player(this, keyHandler, "");
+		player = me.jamboxman5.abnpgame.data.ParseJson.loadLocalPlayer();
 		setGameStage(GameStage.InGameSinglePlayer);
 		music.stop();
 	}
@@ -310,11 +317,12 @@ public class GamePanel extends JPanel implements Runnable {
 	public KeyHandler getKeyHandler() { return keyHandler; }
 
 	public void backToMainMenu() {
+		ui.setCommandNumber(0);
 		debugMode = false;
-		if (getGameStage() != GameStage.MultiplayerMenu) {
+		mouseMotionHandler.setupCursor("Cursor_Pointer");
+		if (getGameStage().toString().contains("InGame")) {
 			music.setFile("music/Menu_Ambience");
 			music.loop();
-			mouseMotionHandler.setupCursor("Cursor_Pointer");
 		}
 		if (getGameStage() == GameStage.InGameMultiplayer) {
 			Packet01Disconnect packet = new Packet01Disconnect(getPlayer().getUsername());
@@ -386,5 +394,15 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public MouseHandler getMouseHandler() {
 		return mouseActionHandler;
+	}
+
+	public void moveToEquipmentMenu() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void moveToPlayMenu() {
+		// TODO Auto-generated method stub
+		
 	}
 }

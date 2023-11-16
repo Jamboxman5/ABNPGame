@@ -338,5 +338,8 @@ public class Player extends Mob {
 	public void setAnimFrame(int i) {
 		animFrame = i;
 	}
+	public void setWeaponLoadout(WeaponLoadout newLoadout) {
+		weapons = newLoadout;
+	}
 
 }

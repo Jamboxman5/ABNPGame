@@ -14,6 +14,7 @@ import me.jamboxman5.abnpgame.assets.entity.Entity;
 import me.jamboxman5.abnpgame.assets.entity.player.OnlinePlayer;
 import me.jamboxman5.abnpgame.assets.entity.projectile.Projectile;
 import me.jamboxman5.abnpgame.assets.maps.Map;
+import me.jamboxman5.abnpgame.assets.weapon.Weapon;
 import me.jamboxman5.abnpgame.main.GamePanel;
 import me.jamboxman5.abnpgame.main.GameStage;
 import me.jamboxman5.abnpgame.util.Utilities;
@@ -157,13 +158,12 @@ public class MapManager {
 		return -1;
 	}
 	
-	public void movePlayer(String username, double x, double y, double rotation, boolean invert) {
+	public void movePlayer(String username, double x, double y, double rotation) {
 		int index = getConnectedPlayerIndex(username);
 		if (index < 0) return;
 		entities.get(index).setWorldX(x*gp.getZoom());
 		entities.get(index).setWorldY(y*gp.getZoom());
 		entities.get(index).setRotation(rotation);
-		((OnlinePlayer)entities.get(index)).setInvert(invert);
 	}
 
 	public void setMap(int mapIndex) {
@@ -182,4 +182,12 @@ public class MapManager {
 	}
 	
 	public List<Map> getMapList() { return maps; }
+
+	public void setWeapon(String username, Weapon weapon) {
+		int idx = getConnectedPlayerIndex(username);
+		if (idx < 0) return;
+		Weapon oldWeapon = ((OnlinePlayer)entities.get(idx)).getWeaponLoadout().getActiveWeapon();
+		((OnlinePlayer)entities.get(idx)).getWeaponLoadout().addWeapon(weapon, true);
+		((OnlinePlayer)entities.get(idx)).getWeaponLoadout().removeWeapon(oldWeapon);
+	}
 }

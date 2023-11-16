@@ -40,6 +40,7 @@ public class Pistol1911 extends Firearm {
 		this.currentAmmo = ammo;
 		this.name = "M1911";
 		this.firingVelocity = 150;
+		this.type = WeaponType.M1911;
 
 	}
 	

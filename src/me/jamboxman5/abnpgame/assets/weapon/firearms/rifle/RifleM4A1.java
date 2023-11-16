@@ -38,6 +38,7 @@ public class RifleM4A1 extends Firearm {
 		this.currentAmmo = ammo;
 		this.name = "M4A1";
 		this.firingVelocity = 150;
+		this.type = WeaponType.M4A1;
 	}
 
 }

@@ -28,7 +28,7 @@ public class KeyHandler implements KeyListener {
         } else if (gamePanel.getGameStage().toString().contains("InGame")) {
             checkPlayStateKeyPressed(code);
 
-        } else if (gamePanel.getGameStage() == GameStage.MultiplayerMenu) {
+        } else if (gamePanel.getGameStage() == GameStage.ArcadeMenu) {
             checkMultiplayerMenuKeyPressed(code);
         } else if (gamePanel.getGameStage() == GameStage.MapSelector) {
         	checkMapSelectorKeyPressed(code);
@@ -91,26 +91,38 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = true;
         }
+        if (code == KeyEvent.VK_ESCAPE) {
+            gamePanel.backToMainMenu();
+        	gamePanel.getUi().setCommandNumber(0);
+            gamePanel.playSoundEffect("sfx/menu/Menu_Select");
+
+        }
     }
     private void checkMapSelectorKeyPressed(int code) {
         if (code == KeyEvent.VK_W) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() - 1);
             gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
             if (gamePanel.getUi().getCommandNumber() < 0) {
-                gamePanel.getUi().setCommandNumber(4);
+                gamePanel.getUi().setCommandNumber(5);
             }
         }
 
         if (code == KeyEvent.VK_S) {
             gamePanel.getUi().setCommandNumber(gamePanel.getUi().getCommandNumber() + 1);
             gamePanel.playSoundEffect("sfx/menu/Menu_Scroll");
-            if (gamePanel.getUi().getCommandNumber() > 4) {
+            if (gamePanel.getUi().getCommandNumber() > 5) {
                 gamePanel.getUi().setCommandNumber(0);
             }
         }
 
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = true;
+        }
+        if (code == KeyEvent.VK_ESCAPE) {
+            gamePanel.backToMainMenu();
+        	gamePanel.getUi().setCommandNumber(0);
+            gamePanel.playSoundEffect("sfx/menu/Menu_Select");
+
         }
     }
 //
